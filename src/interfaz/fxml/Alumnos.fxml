@@ -15,21 +15,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.5" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ControladorAlumno">
+<SplitPane dividerPositions="0.4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ControladorAlumnos">
    <items>
-      <VBox fx:id="panelPrincipal1" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="1000.0">
+      <VBox fx:id="panelPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
-            <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0" VBox.vgrow="NEVER">
+            <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="NEVER">
                <children>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Alumnos">
-                           <font>
-                              <Font name="System Bold" size="22.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
+                  <Label maxWidth="1.7976931348623157E308" text="Alumnos" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
                   <Button fx:id="btnHoy" mnemonicParsing="false" onAction="#buscarHoy" text="Hoy" />
                   <TextField fx:id="tfBuscar" promptText="Buscar" />
                </children>
@@ -37,7 +33,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="tvAlumnos" editable="true" maxWidth="1.7976931348623157E308" prefHeight="344.0" prefWidth="576.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tvAlumnos" editable="true" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
               <columns>
                 <TableColumn fx:id="tcAlumnoId" maxWidth="200.0" minWidth="50.0" prefWidth="20.0" style="-fx-alignment: CENTER_RIGHT;" text="ID" />
                 <TableColumn fx:id="tcAlumnoNombreCompleto" minWidth="0.0" onEditCommit="#handle" prefWidth="163.0" text="Nombre Completo" />
@@ -105,6 +101,24 @@
               <content>
                   <VBox>
                      <children>
+                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="btnClasesBorrar" mnemonicParsing="false" onAction="#borrarClase" text="-">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="btnClasesInsertar" mnemonicParsing="false" onAction="#insertarClase" text="+" />
+                              <Button fx:id="btnClaseCopiar" mnemonicParsing="false" onAction="#copiarClase" text="Copiar">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </HBox>
                         <TableView fx:id="tvClases" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="tcClaseId" maxWidth="100.0" minWidth="25.0" prefWidth="50.0" style="-fx-alignment: CENTER_RIGHT;" text="Id" />
@@ -121,20 +135,6 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <Button fx:id="btnClaseCopiar" mnemonicParsing="false" onAction="#copiarClase" text="Copiar">
-                                 <HBox.margin>
-                                    <Insets right="40.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button fx:id="btnClasesBorrar" mnemonicParsing="false" onAction="#borrarClase" text="-" />
-                              <Button fx:id="btnClasesInsertar" mnemonicParsing="false" onAction="#insertarClase" text="+" />
-                           </children>
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
-                        </HBox>
                      </children>
                   </VBox>
               </content>
@@ -143,8 +143,10 @@
               <content>
                   <VBox>
                      <children>
-                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="25.0" spacing="15.0">
+                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="30.0" spacing="15.0">
                            <children>
+                              <Button fx:id="btnPagosBorrar" mnemonicParsing="false" onAction="#borrarPago" text="-" />
+                              <Button fx:id="btnPagosInsertar" mnemonicParsing="false" onAction="#insertarPago" text="+" />
                               <Label fx:id="lblContratado" text="Contratado: " />
                               <Label fx:id="lblPagado" text="Pagado: " />
                               <Label fx:id="lblSaldo" text="Saldo: " />
@@ -166,15 +168,6 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <Button fx:id="btnPagosBorrar" mnemonicParsing="false" onAction="#borrarPago" text="-" />
-                              <Button fx:id="btnPagosInsertar" mnemonicParsing="false" onAction="#insertarPago" text="+" />
-                           </children>
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
-                        </HBox>
                      </children>
                   </VBox>
               </content>

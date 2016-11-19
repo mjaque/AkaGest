@@ -6,21 +6,22 @@ import java.time.LocalTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import aplicacion.AkaGest;
 import datos.DAOAlumno;
 import datos.DAOAsignatura;
 import datos.DAOClase;
 import datos.DAOPago;
-import interfaz.util.DatePickerTableCell;
-import interfaz.util.LocalTimeTableCell;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -28,29 +29,23 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
-import javafx.util.converter.FloatStringConverter;
+import javafx.stage.Stage;
 import negocio.Alumno;
 import negocio.Asignatura;
 import negocio.Clase;
 import negocio.Pago;
-import util.Log;
-import util.Log.Nivel;
 
-public class ControladorAlumno
+public class ControladorAlumnos
 		implements Initializable, ChangeListener<Alumno>, EventHandler<CellEditEvent<Alumno, String>> {
 
 	private Controlador controladorPrincipal;
@@ -133,10 +128,7 @@ public class ControladorAlumno
 		else {
 			if (olAlumnos != null)
 				olAlumnos.removeAll(olAlumnos);
-			System.out.println("TRON:" + tfBuscar);
-			// olAlumnos =
-			// FXCollections.observableArrayList(DAOAlumno.buscarPorNombre(tfBuscar.getText()));
-			olAlumnos = FXCollections.observableArrayList(DAOAlumno.INSTANCE.buscarPorNombre("jaque"));
+			olAlumnos = FXCollections.observableArrayList(DAOAlumno.INSTANCE.buscarPorNombre(tfBuscar.getText()));
 			tvAlumnos.setItems(olAlumnos);
 			this.borrarTablaClases();
 			this.borrarTablaPagos();
@@ -150,18 +142,13 @@ public class ControladorAlumno
 
 	@FXML
 	protected void insertarClase(ActionEvent event) throws Exception {
-		Clase clase = new Clase();
-		clase.setAlumno(this.tvAlumnos.getSelectionModel().getSelectedItem());
-		clase.guardar();
-		cargarClases(tvAlumnos.getSelectionModel().getSelectedItem());
+		this.controladorAlumnoClase.abrirVentanaClase(null);
 	}
 
 	@FXML
 	protected void insertarPago(ActionEvent event) throws Exception {
-		Pago pago = new Pago();
-		pago.setAlumno(this.tvAlumnos.getSelectionModel().getSelectedItem());
-		pago.guardar();
-		cargarPagos(tvAlumnos.getSelectionModel().getSelectedItem());
+		// Abrimos la ventana de Pago
+		this.controladorAlumnoPago.abrirVentanaPago(null);
 	}
 
 	@FXML
@@ -222,14 +209,18 @@ public class ControladorAlumno
 			Alumno alumno = new Alumno();
 			actualizar(alumno);
 			this.controladorPrincipal.mostrarExito("El alumno se creó con éxito.");
+			actualizarTablaAlumnos();
+			for (Alumno al : tvAlumnos.getItems())
+				if(al.getId() == alumno.getId())
+					tvAlumnos.getSelectionModel().select(al);
 			break;
 		case EDITAR:
 			actualizar(this.tvAlumnos.getSelectionModel().getSelectedItem());
 			this.controladorPrincipal.mostrarExito("El alumno se actualizó con éxito.");
+			this.actualizarTablaAlumnos();
 			break;
 		default:
 		}
-		this.actualizarTablaAlumnos();
 		this.setModo(Modo.ESPERA);
 	}
 
@@ -260,6 +251,7 @@ public class ControladorAlumno
 	@FXML
 	protected void copiarClase(ActionEvent event) throws Exception {
 		ChoiceDialog<Alumno> dialog = new ChoiceDialog<>(null, DAOAlumno.INSTANCE.listar());
+		dialog.setSelectedItem(tvAlumnos.getSelectionModel().getSelectedItem());
 		dialog.setTitle("Elección de Alumno");
 		dialog.setHeaderText(null);
 		dialog.setContentText("Elija el Alumno al que copiar la clase seleccionada:");
@@ -283,24 +275,13 @@ public class ControladorAlumno
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
-			this.controladorPrincipal = IU.getControlador();
+			this.controladorPrincipal = AkaGest.getControlador();
 			this.controladorAlumnoClase = new ControladorAlumnoClase();
 			this.controladorAlumnoPago = new ControladorAlumnoPago();
-
-			// Definimos un cellFactory que no haga commit solo con ENTER
-			// Callback<TableColumn<Alumno, String>, TableCell<Alumno, String>>
-			// cellFactory =
-			// new Callback<TableColumn<Alumno, String>, TableCell<Alumno,
-			// String>>() {
-			// public TableCell call(TableColumn p) {
-			// return new EditingCell<Alumno, String>();
-			// }
-			// };
 
 			tcAlumnoId.setCellValueFactory(new PropertyValueFactory<Alumno, Integer>("id"));
 			tcAlumnoNombreCompleto.setCellValueFactory(new PropertyValueFactory<Alumno, String>("nombreCompleto"));
 			tcAlumnoNombreCompleto.setCellFactory(TextFieldTableCell.<Alumno>forTableColumn());
-			// tcAlumnoNombreCompleto.setCellFactory(cellFactory);
 			tcAlumnoNombreCompleto.setOnEditCommit(this);
 			tcAlumnoEmail.setCellValueFactory(new PropertyValueFactory<Alumno, String>("email"));
 			tcAlumnoEmail.setCellFactory(TextFieldTableCell.<Alumno>forTableColumn());
@@ -358,7 +339,6 @@ public class ControladorAlumno
 			if (event.getTarget().equals(tcAlumnoEmail))
 				event.getRowValue().setEmail(event.getNewValue());
 			if (event.getTarget().equals(tcAlumnoTelefonos)) {
-				System.out.println("Teléfonos: " + event.getNewValue());
 				event.getRowValue().setTelefonos(event.getNewValue());
 			}
 			if (event.getTarget().equals(tcAlumnoCentroEstudios))
@@ -423,7 +403,6 @@ public class ControladorAlumno
 			alumno.setNombreCompleto(tfNombreCompleto.getText());
 			alumno.setNif(tfNif.getText());
 			alumno.setEmail(tfEmail.getText());
-			System.out.println("Controlador Principal fijado");
 			alumno.setTelefonos(tfTelefonos.getText());
 			alumno.setCentroEstudios(tfCentroEstudios.getText());
 			alumno.setDatosProgenitor(taDatosProgenitor.getText());
@@ -505,11 +484,11 @@ public class ControladorAlumno
 		this.modo = modo;
 	}
 
-	class ControladorAlumnoClase implements Initializable, ChangeListener<Clase>, EventHandler {
+	class ControladorAlumnoClase
+			implements Actualizable, Initializable, ChangeListener<Clase>, EventHandler<MouseEvent> {
 
 		private ObservableList<Asignatura> olAsignaturas;
 		private ObservableList<Clase.Estado> olEstados;
-		private Modo modo;
 
 		public ControladorAlumnoClase() throws Exception {
 			super();
@@ -540,73 +519,79 @@ public class ControladorAlumno
 				// }
 				// };
 
-				Callback<TableColumn<Clase, LocalDate>, TableCell<Clase, LocalDate>> cellFactoryLocalDate = new Callback<TableColumn<Clase, LocalDate>, TableCell<Clase, LocalDate>>() {
-					public TableCell call(TableColumn p) {
-						return new DatePickerTableCell<Clase>(tcClaseFecha);
-					}
-				};
+				// Callback<TableColumn<Clase, LocalDate>, TableCell<Clase,
+				// LocalDate>> cellFactoryLocalDate = new
+				// Callback<TableColumn<Clase, LocalDate>, TableCell<Clase,
+				// LocalDate>>() {
+				// public TableCell call(TableColumn p) {
+				// return new DatePickerTableCell<Clase>(tcClaseFecha);
+				// }
+				// };
 
 				tcClaseFecha.setCellValueFactory(new PropertyValueFactory<Clase, LocalDate>("fecha"));
-				tcClaseFecha.setCellFactory(cellFactoryLocalDate);
-				tcClaseFecha.setOnEditCommit(this);
+				// tcClaseFecha.setCellFactory(cellFactoryLocalDate);
+				// tcClaseFecha.setOnEditCommit(this);
 
 				tcClaseHora.setCellValueFactory(new PropertyValueFactory<Clase, LocalTime>("hora"));
 				// tcClaseHora.setCellFactory(TextFieldTableCell.<Clase>
 				// forTableColumn());
-				tcClaseHora.setCellFactory(new Callback<TableColumn<Clase, LocalTime>, TableCell<Clase, LocalTime>>() {
-					public TableCell call(TableColumn p) {
-						return new LocalTimeTableCell<Clase>();
-					}
-				});
-				tcClaseHora.setOnEditCommit(this);
+				// tcClaseHora.setCellFactory(new Callback<TableColumn<Clase,
+				// LocalTime>, TableCell<Clase, LocalTime>>() {
+				// public TableCell call(TableColumn p) {
+				// return new LocalTimeTableCell<Clase>();
+				// }
+				// });
+				// tcClaseHora.setOnEditCommit(this);
 
-				olAsignaturas.add(new Asignatura("Nueva Asignatura"));
+				// olAsignaturas.add(new Asignatura("Nueva Asignatura"));
 				tcClaseAsignatura.setCellValueFactory(new PropertyValueFactory<Clase, Asignatura>("asignatura"));
-				tcClaseAsignatura.setCellFactory(ComboBoxTableCell.forTableColumn(olAsignaturas));
-				// tcClaseAsignatura.setOnEditStart(this);
-				tcClaseAsignatura.setOnEditCommit(this);
+				// tcClaseAsignatura.setCellFactory(ComboBoxTableCell.forTableColumn(olAsignaturas));
+				// // tcClaseAsignatura.setOnEditStart(this);
+				// tcClaseAsignatura.setOnEditCommit(this);
 
 				tcClaseDuracion.setCellValueFactory(new PropertyValueFactory<Clase, Float>("duracion"));
-				tcClaseDuracion
-						.setCellFactory(TextFieldTableCell.<Clase, Float>forTableColumn(new FloatStringConverter()));
-				tcClaseDuracion.setOnEditCommit(this);
+				// tcClaseDuracion
+				// .setCellFactory(TextFieldTableCell.<Clase,
+				// Float>forTableColumn(new FloatStringConverter()));
+				// tcClaseDuracion.setOnEditCommit(this);
 
 				tcClasePrecioHora.setCellValueFactory(new PropertyValueFactory<Clase, Float>("precioHora"));
-				tcClasePrecioHora
-						.setCellFactory(TextFieldTableCell.<Clase, Float>forTableColumn(new FloatStringConverter()));
-				tcClasePrecioHora.setOnEditCommit(this);
+				// tcClasePrecioHora
+				// .setCellFactory(TextFieldTableCell.<Clase,
+				// Float>forTableColumn(new FloatStringConverter()));
+				// tcClasePrecioHora.setOnEditCommit(this);
 
 				tcClaseEstado.setCellValueFactory(new PropertyValueFactory<Clase, Clase.Estado>("estado"));
-				tcClaseEstado.setCellFactory(ComboBoxTableCell.forTableColumn(olEstados));
-				tcClaseEstado.setOnEditCommit(this);
+				// tcClaseEstado.setCellFactory(ComboBoxTableCell.forTableColumn(olEstados));
+				// tcClaseEstado.setOnEditCommit(this);
 
 				tcClaseAsistencia.setCellValueFactory(new PropertyValueFactory<Clase, Boolean>("asistencia"));
-				tcClaseAsistencia.setCellFactory(CheckBoxTableCell.forTableColumn(tcClaseAsistencia));
-				tcClaseAsistencia.setCellFactory(
-						CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
-							@Override
-							public ObservableValue<Boolean> call(Integer param) {
-								try {
-									tvClases.getItems().get(param).guardar();
-								} catch (Exception e) {
-									e.printStackTrace();
-									Controlador.lanzarExcepcion(e.getMessage());
-								}
-								// Quitado porque se lanza automáticamente al
-								// cargar las clases.
-								// controladorPrincipal.mostrarExito("La
-								// asistencia a clase se actualizó con éxito.");
-								return tvClases.getItems().get(param).asistenciaProperty();
-							}
-						}));
+				// tcClaseAsistencia.setCellFactory(CheckBoxTableCell.forTableColumn(tcClaseAsistencia));
+				// tcClaseAsistencia.setCellFactory(
+				// CheckBoxTableCell.forTableColumn(new Callback<Integer,
+				// ObservableValue<Boolean>>() {
+				// @Override
+				// public ObservableValue<Boolean> call(Integer param) {
+				// try {
+				// tvClases.getItems().get(param).guardar();
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// Controlador.lanzarExcepcion(e.getMessage());
+				// }
+				// // Quitado porque se lanza automáticamente al
+				// // cargar las clases.
+				// // controladorPrincipal.mostrarExito("La
+				// // asistencia a clase se actualizó con éxito.");
+				// return tvClases.getItems().get(param).asistenciaProperty();
+				// }
+				// }));
 
 				tcClaseObservaciones.setCellValueFactory(new PropertyValueFactory<Clase, String>("notas"));
-				tcClaseObservaciones.setCellFactory(TextFieldTableCell.<Clase>forTableColumn());
-				tcClaseObservaciones.setOnEditCommit(this);
+				// tcClaseObservaciones.setCellFactory(TextFieldTableCell.<Clase>forTableColumn());
+				// tcClaseObservaciones.setOnEditCommit(this);
 
-				tvClases.getSelectionModel().selectedItemProperty().addListener(this);
-
-				this.setModo(Modo.ESPERA);
+				// tvClases.getSelectionModel().selectedItemProperty().addListener(this);
+				tvClases.setOnMousePressed(this);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -616,196 +601,121 @@ public class ControladorAlumno
 		}
 
 		@Override
-		public void handle(Event event) {
+		public void handle(MouseEvent event) {
 			try {
-				if (event.getTarget().equals(tcClaseFecha)) {
-					CellEditEvent<Clase, LocalDate> cellEditEventFecha = (CellEditEvent<Clase, LocalDate>) event;
-					// event.getRowValue().setFecha(LocalDateTime.parse(event.getNewValue()));
-					cellEditEventFecha.getRowValue().setFecha(cellEditEventFecha.getNewValue());
-					cellEditEventFecha.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("La fecha de la clase se actualizó con éxito.");
+				if (event.getSource().equals(tvClases)) {
+					if (event.isPrimaryButtonDown() && event.getClickCount() == 2)
+						this.abrirVentanaClase((Clase) tvClases.getSelectionModel().getSelectedItem());
 				}
-
-				else if (event.getTarget().equals(tcClaseHora)) {
-					CellEditEvent<Clase, LocalTime> cellEditEventHora = (CellEditEvent<Clase, LocalTime>) event;
-					// event.getRowValue().setFecha(LocalDateTime.parse(event.getNewValue()));
-					cellEditEventHora.getRowValue().setHora(cellEditEventHora.getNewValue());
-					cellEditEventHora.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("La hora de la clase se actualizó con éxito.");
-				}
-
-				else if (event.getTarget().equals(tcClaseAsignatura)) {
-					CellEditEvent<Clase, Asignatura> cellEditEventAsignatura = (CellEditEvent<Clase, Asignatura>) event;
-					Asignatura asignatura = cellEditEventAsignatura.getNewValue();
-					if (asignatura.getId() == 0) {
-						TextInputDialog textInputDialog = new TextInputDialog("nombre...");
-						textInputDialog.setTitle("Nueva Asignatura");
-						// textInputDialog.setHeaderText("Indica el nombre de la
-						// nueva asignatura");
-						textInputDialog.setContentText("Indica el nombre de la nueva asignatura");
-						Optional<String> nombre = textInputDialog.showAndWait();
-						if (nombre.isPresent()) {
-							asignatura.setNombre(nombre.get());
-							asignatura.guardar();
-							cellEditEventAsignatura.getRowValue().setAsignatura(asignatura);
-							cellEditEventAsignatura.getRowValue().guardar();
-							controladorPrincipal.mostrarExito("La asignatura de la clase se actualizó con éxito.");
-						} else {
-							cellEditEventAsignatura.getRowValue().setAsignatura(cellEditEventAsignatura.getOldValue());
-							controladorPrincipal.mostrarExito("Edición de asignatura cancelada.");
-						}
-					} else {
-						cellEditEventAsignatura.getRowValue().setAsignatura(cellEditEventAsignatura.getNewValue());
-						cellEditEventAsignatura.getRowValue().guardar();
-						controladorPrincipal.mostrarExito("La asignatura de la clase se actualizó con éxito.");
-					}
-				}
-
-				else if (event.getTarget().equals(tcClaseDuracion)) {
-					CellEditEvent<Clase, Float> cellEditEventFloat = (CellEditEvent<Clase, Float>) event;
-					cellEditEventFloat.getRowValue().setDuracion(Float.valueOf(cellEditEventFloat.getNewValue()));
-					cellEditEventFloat.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("La duración de la clase se actualizó con éxito.");
-				}
-
-				else if (event.getTarget().equals(tcClasePrecioHora)) {
-					CellEditEvent<Clase, Float> cellEditEventPrecioHora = (CellEditEvent<Clase, Float>) event;
-					cellEditEventPrecioHora.getRowValue()
-							.setPrecioHora(Float.valueOf(cellEditEventPrecioHora.getNewValue()));
-					cellEditEventPrecioHora.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("El precio/hora de la clase se actualizó con éxito.");
-				}
-
-				else if (event.getTarget().equals(tcClaseEstado)) {
-					CellEditEvent<Clase, Clase.Estado> cellEditEventEstado = (CellEditEvent<Clase, Clase.Estado>) event;
-					cellEditEventEstado.getRowValue().setEstado(cellEditEventEstado.getNewValue());
-					cellEditEventEstado.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("El estado de la clase se actualizó con éxito.");
-				}
-
-				// else if (event.getTarget().equals(tcClaseAsistencia))
-				// event.getRowValue().setAsistencia(Boolean.valueOf(event.getNewValue()));
-
-				else if (event.getTarget().equals(tcClaseObservaciones)) {
-					CellEditEvent<Clase, String> cellEditEventObservaciones = (CellEditEvent<Clase, String>) event;
-					cellEditEventObservaciones.getRowValue().setNotas(cellEditEventObservaciones.getNewValue());
-					cellEditEventObservaciones.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("Las observaciones de la clase se actualizaron con éxito.");
-				}
-
-				cargarClases(tvAlumnos.getSelectionModel().getSelectedItem());
 			} catch (Exception e) {
 				e.printStackTrace();
 				Controlador.lanzarExcepcion(e.getMessage());
 			}
+		}
+
+		public void abrirVentanaClase(Clase clase) throws Exception {
+			FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("fxml/Clase.fxml"));
+			Parent root = fxmlLoader.load();
+			// root.getStylesheets().add(this.getClass().getResource("fxml/pago.css").toExternalForm());
+			ControladorClase controladorClase = fxmlLoader.<ControladorClase>getController();
+			controladorClase.setClase(clase);
+			controladorClase.setAlumno(tvAlumnos.getSelectionModel().getSelectedItem());
+			controladorClase.setControladorLlamante(this);
+			Stage stage = new Stage();
+			if (clase == null)
+				stage.setTitle("Nueva Clase");
+			else
+				stage.setTitle("Edición de la Clase " + clase.getId());
+			stage.setScene(new Scene(root));
+			stage.show();
 		}
 
 		@Override
 		public void changed(ObservableValue<? extends Clase> observable, Clase oldValue, Clase newValue) {
 			Clase clase = tvClases.getSelectionModel().getSelectedItem();
-			if (clase != null)
-				this.setModo(Modo.SELECCIONADO);
-			else
-				this.setModo(Modo.ESPERA);
+
 		}
 
-		private void setModo(Modo modo) {
-			switch (modo) {
-			case ESPERA:
-				btnClaseCopiar.setDisable(true);
-				btnClasesBorrar.setDisable(true);
-				break;
-			case SELECCIONADO:
-				btnClaseCopiar.setDisable(false);
-				btnClasesBorrar.setDisable(false);
-				break;
-			}
-			this.modo = modo;
+		@Override
+		public void actualizar(Object object) throws Exception {
+			Clase clase = (Clase) object;
+			cargarClases(tvAlumnos.getSelectionModel().getSelectedItem());
+			for (Clase cl : tvClases.getItems())
+				if (cl.getId() == clase.getId()) {
+					tvClases.getSelectionModel().select(cl);
+					break;
+				}
 		}
-	
 	}
 
-	class ControladorAlumnoPago implements Initializable, ChangeListener<Pago>, EventHandler {
+	class ControladorAlumnoPago implements Actualizable, Initializable, ChangeListener<Pago>, EventHandler<MouseEvent> {
 
 		private ObservableList<Pago.Operacion> olOperaciones = FXCollections
 				.observableArrayList(Pago.Operacion.values());
-		private Modo modo;
 
 		@Override
 		public void initialize(URL location, ResourceBundle resources) {
 			tcPagoId.setCellValueFactory(new PropertyValueFactory<Pago, Integer>("id"));
 
-			Callback<TableColumn<Pago, LocalDate>, TableCell<Pago, LocalDate>> cellFactoryLocalDate = new Callback<TableColumn<Pago, LocalDate>, TableCell<Pago, LocalDate>>() {
-				public TableCell call(TableColumn p) {
-					return new DatePickerTableCell<Pago>(tcPagoFecha);
-				}
-			};
+			// Callback<TableColumn<Pago, LocalDate>, TableCell<Pago,
+			// LocalDate>> cellFactoryLocalDate = new Callback<TableColumn<Pago,
+			// LocalDate>, TableCell<Pago, LocalDate>>() {
+			// public TableCell call(TableColumn p) {
+			// return new DatePickerTableCell<Pago>(tcPagoFecha);
+			// }
+			// };
 
 			tcPagoFecha.setCellValueFactory(new PropertyValueFactory<Pago, LocalDate>("fecha"));
-			tcPagoFecha.setCellFactory(cellFactoryLocalDate);
-			tcPagoFecha.setOnEditCommit(this);
+			// tcPagoFecha.setCellFactory(cellFactoryLocalDate);
+			// tcPagoFecha.setOnEditCommit(this);
 
 			tcPagoOperacion.setCellValueFactory(new PropertyValueFactory<Pago, Pago.Operacion>("operacion"));
-			tcPagoOperacion.setCellFactory(ComboBoxTableCell.forTableColumn(olOperaciones));
-			tcPagoOperacion.setOnEditCommit(this);
+			// tcPagoOperacion.setCellFactory(ComboBoxTableCell.forTableColumn(olOperaciones));
+			// tcPagoOperacion.setOnEditCommit(this);
 
 			tcPagoImporte.setCellValueFactory(new PropertyValueFactory<Pago, Float>("importe"));
-			tcPagoImporte.setCellFactory(TextFieldTableCell.<Pago, Float>forTableColumn(new FloatStringConverter()));
-			tcPagoImporte.setOnEditCommit(this);
+			// tcPagoImporte.setCellFactory(TextFieldTableCell.<Pago,
+			// Float>forTableColumn(new FloatStringConverter()));
+			// tcPagoImporte.setOnEditCommit(this);
 
 			tcPagoRecibo.setCellValueFactory(new PropertyValueFactory<Pago, String>("recibo"));
-			tcPagoRecibo.setCellFactory(TextFieldTableCell.<Pago>forTableColumn());
-			tcPagoRecibo.setOnEditCommit(this);
+			// tcPagoRecibo.setCellFactory(TextFieldTableCell.<Pago>forTableColumn());
+			// tcPagoRecibo.setOnEditCommit(this);
 
 			tcPagoObservaciones.setCellValueFactory(new PropertyValueFactory<Pago, String>("notas"));
-			tcPagoObservaciones.setCellFactory(TextFieldTableCell.<Pago>forTableColumn());
-			tcPagoObservaciones.setOnEditCommit(this);
+			// tcPagoObservaciones.setCellFactory(TextFieldTableCell.<Pago>forTableColumn());
+			// tcPagoObservaciones.setOnEditCommit(this);
 
-			tvPagos.getSelectionModel().selectedItemProperty().addListener(this);
+			// tvPagos.getSelectionModel().selectedItemProperty().addListener(this);
+			tvPagos.setOnMousePressed(this);
 
-			setModo(Modo.ESPERA);
+			// setModo(Modo.ESPERA);
+		}
+
+		public void abrirVentanaPago(Pago pago) throws Exception {
+			FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("fxml/Pago.fxml"));
+			Parent root = fxmlLoader.load();
+			// root.getStylesheets().add(this.getClass().getResource("fxml/pago.css").toExternalForm());
+			ControladorPago controladorPago = fxmlLoader.<ControladorPago>getController();
+			controladorPago.setPago(pago);
+			controladorPago.setAlumno(tvAlumnos.getSelectionModel().getSelectedItem());
+			controladorPago.setControladorLlamante(this);
+			Stage stage = new Stage();
+			if (pago == null)
+				stage.setTitle("Nuevo Pago");
+			else
+				stage.setTitle("Edición del Pago " + pago.getId());
+			stage.setScene(new Scene(root));
+			stage.show();
 		}
 
 		@Override
-		public void handle(Event event) {
+		public void handle(MouseEvent event) {
 			try {
-				if (event.getTarget().equals(tcPagoFecha)) {
-					CellEditEvent<Pago, LocalDate> cellEditEventFecha = (CellEditEvent<Pago, LocalDate>) event;
-					cellEditEventFecha.getRowValue().setFecha(cellEditEventFecha.getNewValue());
-					cellEditEventFecha.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("La fecha del pago se actualizó con éxito.");
+				if (event.getSource().equals(tvPagos)) {
+					if (event.isPrimaryButtonDown() && event.getClickCount() == 2)
+						this.abrirVentanaPago((Pago) tvPagos.getSelectionModel().getSelectedItem());
 				}
-
-				else if (event.getTarget().equals(tcPagoImporte)) {
-					CellEditEvent<Pago, Float> cellEditEventFloat = (CellEditEvent<Pago, Float>) event;
-					cellEditEventFloat.getRowValue().setImporte(Float.valueOf(cellEditEventFloat.getNewValue()));
-					cellEditEventFloat.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("El importe del pago se actualizó con éxito.");
-				}
-
-				else if (event.getTarget().equals(tcPagoOperacion)) {
-					CellEditEvent<Pago, Pago.Operacion> cellEditEventOperacion = (CellEditEvent<Pago, Pago.Operacion>) event;
-					cellEditEventOperacion.getRowValue().setOperacion(cellEditEventOperacion.getNewValue());
-					cellEditEventOperacion.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("El tipo de operación del pago se actualizó con éxito.");
-				}
-
-				else if (event.getTarget().equals(tcPagoRecibo)) {
-					CellEditEvent<Pago, String> cellEditEventString = (CellEditEvent<Pago, String>) event;
-					cellEditEventString.getRowValue().setRecibo(cellEditEventString.getNewValue());
-					cellEditEventString.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("El recibo del pago se actualizaró con éxito.");
-				}
-
-				else if (event.getTarget().equals(tcPagoObservaciones)) {
-					CellEditEvent<Pago, String> cellEditEventObservaciones = (CellEditEvent<Pago, String>) event;
-					cellEditEventObservaciones.getRowValue().setNotas(cellEditEventObservaciones.getNewValue());
-					cellEditEventObservaciones.getRowValue().guardar();
-					controladorPrincipal.mostrarExito("Las observaciones del pago se actualizaron con éxito.");
-				}
-
-				cargarPagos(tvAlumnos.getSelectionModel().getSelectedItem());
-
 			} catch (Exception e) {
 				e.printStackTrace();
 				Controlador.lanzarExcepcion(e.getMessage());
@@ -815,22 +725,17 @@ public class ControladorAlumno
 		@Override
 		public void changed(ObservableValue<? extends Pago> observable, Pago oldValue, Pago newValue) {
 			Pago pago = tvPagos.getSelectionModel().getSelectedItem();
-			if (pago != null) 
-				this.setModo(Modo.SELECCIONADO);
-			else
-				this.setModo(Modo.ESPERA);
 		}
 
-		private void setModo(Modo modo) {
-			switch (modo) {
-			case ESPERA:
-				btnPagosBorrar.setDisable(true);
-				break;
-			case SELECCIONADO:
-				btnPagosBorrar.setDisable(false);
-				break;
-			}
-			this.modo = modo;
+		@Override
+		public void actualizar(Object object) throws Exception {
+			Pago pago = (Pago) object;
+			cargarPagos(tvAlumnos.getSelectionModel().getSelectedItem());
+			for (Pago pg : tvPagos.getItems())
+				if (pg.getId() == pago.getId()) {
+					tvPagos.getSelectionModel().select(pg);
+					break;
+				}
 		}
 
 	}

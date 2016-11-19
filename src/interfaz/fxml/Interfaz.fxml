@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane fx:id="panelPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.Controlador">
+<BorderPane fx:id="panelPrincipal" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.Controlador">
    <top>
-      <MenuBar prefHeight="29.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+      <MenuBar prefHeight="29.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Ver">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#verAlumnos" text="Alumnos">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="A" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#verClases" text="Clases">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="C" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#verPagos" text="Pagos">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="P" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#salir" text="Salir">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Informes">
@@ -43,7 +44,13 @@
                 <MenuItem mnemonicParsing="false" onAction="#verArqueoCaja" text="Arqueo de Caja">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#verResultados" text="Resultados">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Ayuda">
@@ -51,14 +58,15 @@
                 <MenuItem mnemonicParsing="false" onAction="#verAcercaDe" text="Acerca de">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="Z" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
+                     </accelerator>
+                  </MenuItem>
               </items>
             </Menu>
         </menus>
       </MenuBar>
    </top>
    <bottom>
-      <Pane fx:id="panelEstado" prefHeight="25.0" prefWidth="1265.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="panelEstado" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" prefWidth="1265.0" BorderPane.alignment="CENTER">
          <opaqueInsets>
             <Insets top="2.0" />
          </opaqueInsets>
@@ -67,27 +75,6 @@
          </children>
       </Pane>
    </bottom>
-   <left>
-      <Accordion fx:id="panelIzquierda" BorderPane.alignment="CENTER">
-        <panes>
-          <TitledPane animated="false" text="untitled 1">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" text="untitled 2">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" text="untitled 3">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-        </panes>
-      </Accordion>
-   </left>
    <padding>
       <Insets left="10.0" />
    </padding>

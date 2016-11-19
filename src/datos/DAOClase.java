@@ -9,6 +9,8 @@ import java.sql.Time;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import interfaz.Controlador;
 import negocio.Alumno;
@@ -31,10 +33,12 @@ public enum DAOClase {
 	private final String SQL_BORRAR = "DELETE FROM " + TABLA + " WHERE ID=?";
 	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " ORDER BY FECHA, HORA ASC";
 	private final String SQL_LISTAR_POR_ALUMNO = "SELECT " + COLUMNAS + " FROM " + TABLA
-			+ " WHERE ID_ALUMNO = ? ORDER BY FECHA, HORA ASC";
+			+ " WHERE ID_ALUMNO = ? ORDER BY FECHA DESC, HORA DESC";
 	private final String SQL_CONTRATADO_POR_ALUMNO = "SELECT SUM(PRECIO * DURACION) FROM " + TABLA
 			+ " WHERE ID_ALUMNO = ?";
-	private PreparedStatement psCargar, psInsertar, psActualizar, psBorrar, psListar, psListarPorAlumno, psBuscar, psContratadoPorAlumno;
+	private final String SQL_PAGOS_MES = "SELECT  MONTH(FECHA), SUM (DURACION * PRECIO)  FROM " + TABLA + " GROUP BY MONTH(FECHA) ORDER BY 1";
+	
+	private PreparedStatement psCargar, psInsertar, psActualizar, psBorrar, psListar, psListarPorAlumno, psBuscar, psContratadoPorAlumno, psPagosMes;
 
 	private DAOClase(){
 		try {
@@ -45,6 +49,7 @@ public enum DAOClase {
 			this.psInsertar = BD.INSTANCE.getConexion().prepareStatement(SQL_INSERTAR, Statement.RETURN_GENERATED_KEYS);
 			this.psActualizar = BD.INSTANCE.getConexion().prepareStatement(SQL_ACTUALIZAR);
 			this.psBorrar = BD.INSTANCE.getConexion().prepareStatement(SQL_BORRAR);
+			this.psPagosMes = BD.INSTANCE.getConexion().prepareStatement(SQL_PAGOS_MES);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			Controlador.lanzarExcepcion(e.getMessage());
@@ -165,6 +170,17 @@ public enum DAOClase {
 		item.setAsistencia(rs.getBoolean("ASISTENCIA"));
 		item.setNotas(rs.getString("NOTAS"));
 		return item;
+	}
+	
+	public Map<Integer, Float> verPagosPorMes() throws Exception{
+		Map<Integer, Float> resultado = new HashMap<>();
+
+		ResultSet rs = this.psPagosMes.executeQuery();
+		while (rs.next())
+			resultado.put(rs.getInt(1), rs.getFloat(2));
+		
+		rs.close();
+		return resultado;
 	}
 
 

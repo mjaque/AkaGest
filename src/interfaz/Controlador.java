@@ -2,42 +2,63 @@ package interfaz;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
+import aplicacion.AkaGest;
 import datos.DAOPago;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class Controlador implements Initializable {
 	
 	private Parent panelAlumnos;
 	private Parent panelClases;
 	private Parent panelPagos;
-	
+	private Parent panelResultados;
+	private Stage stageResultado = new Stage();
+	private ControladorResultados controladorResultados;
+		
 	@FXML //  fx:id="panelPrincipal"
     private BorderPane panelPrincipal; // Value injected by FXMLLoader
-
+	
 	@FXML
     private Label lblEstado; // Value injected by FXMLLoader
 	
 	public Controlador(){
-		IU.setControlador(this);
+		AkaGest.setControlador(this);
 		try {
 			this.panelAlumnos = FXMLLoader.load(this.getClass().getResource("fxml/Alumnos.fxml"));
 			this.panelAlumnos.getStylesheets().add(this.getClass().getResource("fxml/alumnos.css").toExternalForm());
 			this.panelClases = FXMLLoader.load(this.getClass().getResource("fxml/Clases.fxml"));
 			//this.panelClases.getStylesheets().add(this.getClass().getResource("fxml/clases.css").toExternalForm());
 			this.panelPagos = FXMLLoader.load(this.getClass().getResource("fxml/Pagos.fxml"));
+			
+			FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("fxml/Resultados.fxml"));
+			this.panelResultados = fxmlLoader.load();
+			this.controladorResultados = fxmlLoader.<ControladorResultados>getController();
+			stageResultado.setScene(new Scene(this.panelResultados));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			Controlador.lanzarExcepcion(e.getMessage());
@@ -65,6 +86,12 @@ public class Controlador implements Initializable {
 	}
 	
 	@FXML
+	public void verResultados(ActionEvent event){
+		this.controladorResultados.actualizar();
+		this.stageResultado.show();
+	}
+	
+	@FXML
 	public void verArqueoCaja(ActionEvent event) throws Exception{
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Arqueo de Caja");
@@ -78,7 +105,7 @@ public class Controlador implements Initializable {
 	public void verAcercaDe(ActionEvent event){
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Acerca de AkaGest");
-		alert.setHeaderText("AkaGest v.1\nCreado por Miguel Jaque (mjaque@migueljaque.com)");
+		alert.setHeaderText("AkaGest RC 1.1\nCreado por Miguel Jaque (mjaque@migueljaque.com)");
 		alert.setContentText("Este programa se distribuye bajo los términos de la licencia GPL v3, que puede consultarse en www.gnu.org");
 		//Workarround para evitar que el texto salga cortado
 		alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node-> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
@@ -108,13 +135,13 @@ public class Controlador implements Initializable {
 
 	public static void lanzarExcepcion(String message) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error fatal (Excepción)");
-		alert.setHeaderText("Ha ocurrido un error y no es posible continuar.");
+		alert.setTitle("Error (Excepción)");
+		alert.setHeaderText("Ha ocurrido un error.");
 		alert.setContentText(message);
 		//Workarround para evitar que el texto salga cortado
 		alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node-> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
 		alert.showAndWait();
-		System.exit(-1);
+		//System.exit(-1);
 	}
 
 }

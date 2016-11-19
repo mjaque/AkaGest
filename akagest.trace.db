@@ -1,0 +1,249 @@
+2016-09-08 18:29:14 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Valor demasiado largo para la columna "IMPORTE DECIMAL(5, 2)": "44444.00 (7)"
+Value too long for column "IMPORTE DECIMAL(5, 2)": "44444.00 (7)"; SQL statement:
+INSERT INTO PAGO (ID, ID_ALUMNO, FECHA, OPERACION, RECIBO, IMPORTE, OBSERVACIONES) VALUES (NULL,?,?,?,?,?,?) [22001-192]
+2016-09-08 18:29:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Valor demasiado largo para la columna "IMPORTE DECIMAL(5, 2)": "1111.00 (6)"
+Value too long for column "IMPORTE DECIMAL(5, 2)": "1111.00 (6)"; SQL statement:
+INSERT INTO PAGO (ID, ID_ALUMNO, FECHA, OPERACION, RECIBO, IMPORTE, OBSERVACIONES) VALUES (NULL,?,?,?,?,?,?) [22001-192]
+2016-09-27 08:24:25 database: close
+org.h2.message.DbException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.get(DbException.java:168)
+	at org.h2.message.DbException.convertIOException(DbException.java:330)
+	at org.h2.store.FileStore.readFully(FileStore.java:275)
+	at org.h2.store.PageStore.readPage(PageStore.java:1325)
+	at org.h2.store.PageStore.getPage(PageStore.java:749)
+	at org.h2.store.PageStreamTrunk$Iterator.next(PageStreamTrunk.java:251)
+	at org.h2.store.PageLog.free(PageLog.java:213)
+	at org.h2.store.PageStore.compact(PageStore.java:498)
+	at org.h2.engine.Database.closeOpenFilesAndUnlock(Database.java:1359)
+	at org.h2.engine.Database.close(Database.java:1289)
+	at org.h2.engine.Database.removeSession(Database.java:1173)
+	at org.h2.engine.Session.close(Session.java:825)
+	at org.h2.jdbc.JdbcConnection.close(JdbcConnection.java:397)
+	at org.h2.server.web.WebSession.close(WebSession.java:267)
+	at org.h2.server.web.WebServer.stop(WebServer.java:402)
+	at org.h2.tools.Server.stop(Server.java:550)
+	at org.h2.tools.Console.shutdown(Console.java:326)
+	at org.h2.tools.Console.actionPerformed(Console.java:549)
+	at java.awt.MenuItem.processActionEvent(MenuItem.java:669)
+	at java.awt.MenuItem.processEvent(MenuItem.java:628)
+	at java.awt.MenuComponent.dispatchEventImpl(MenuComponent.java:351)
+	at java.awt.MenuComponent.dispatchEvent(MenuComponent.java:339)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:761)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.awt.EventQueue$4.run(EventQueue.java:731)
+	at java.awt.EventQueue$4.run(EventQueue.java:729)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:728)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+Caused by: org.h2.jdbc.JdbcSQLException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	... 40 more
+Caused by: java.io.EOFException
+	at org.h2.store.fs.FileUtils.readFully(FileUtils.java:358)
+	at org.h2.store.FileStore.readFully(FileStore.java:273)
+	... 37 more
+2016-09-27 12:26:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Error de Sintaxis en sentencia SQL "[*]""SELECT  MONTH(FECHA), SUM (DURACION * PRECIO)  FROM CLASE GROUP BY MONTH(FECHA) ORDER BY 1"
+Syntax error in SQL statement "[*]""SELECT  MONTH(FECHA), SUM (DURACION * PRECIO)  FROM CLASE GROUP BY MONTH(FECHA) ORDER BY 1"; SQL statement:
+"SELECT  MONTH(FECHA), SUM (DURACION * PRECIO)  FROM CLASE GROUP BY MONTH(FECHA) ORDER BY 1 [42000-192]
+2016-09-27 12:27:37 database: close
+org.h2.message.DbException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.get(DbException.java:168)
+	at org.h2.message.DbException.convertIOException(DbException.java:330)
+	at org.h2.store.FileStore.readFully(FileStore.java:275)
+	at org.h2.store.PageStore.readPage(PageStore.java:1325)
+	at org.h2.store.PageStore.getPage(PageStore.java:749)
+	at org.h2.store.PageStreamTrunk$Iterator.next(PageStreamTrunk.java:251)
+	at org.h2.store.PageLog.free(PageLog.java:213)
+	at org.h2.store.PageStore.compact(PageStore.java:498)
+	at org.h2.engine.Database.closeOpenFilesAndUnlock(Database.java:1359)
+	at org.h2.engine.Database.close(Database.java:1289)
+	at org.h2.engine.DatabaseCloser.run(DatabaseCloser.java:63)
+Caused by: org.h2.jdbc.JdbcSQLException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	... 11 more
+Caused by: java.io.EOFException
+	at org.h2.store.fs.FileUtils.readFully(FileUtils.java:358)
+	at org.h2.store.FileStore.readFully(FileStore.java:273)
+	... 8 more
+2016-09-28 15:52:14 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+SELECT version FROM CONFIGURACION [42102-192]
+2016-09-28 15:58:50 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+SELECT VERSION FROM CONFIGURACION [42102-192]
+2016-09-28 16:00:31 database: close
+org.h2.message.DbException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.get(DbException.java:168)
+	at org.h2.message.DbException.convertIOException(DbException.java:330)
+	at org.h2.store.FileStore.readFully(FileStore.java:275)
+	at org.h2.store.PageStore.readPage(PageStore.java:1325)
+	at org.h2.store.PageStore.getPage(PageStore.java:749)
+	at org.h2.store.PageStreamTrunk$Iterator.next(PageStreamTrunk.java:251)
+	at org.h2.store.PageLog.free(PageLog.java:213)
+	at org.h2.store.PageStore.compact(PageStore.java:498)
+	at org.h2.engine.Database.closeOpenFilesAndUnlock(Database.java:1359)
+	at org.h2.engine.Database.close(Database.java:1289)
+	at org.h2.engine.DatabaseCloser.run(DatabaseCloser.java:63)
+Caused by: org.h2.jdbc.JdbcSQLException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	... 11 more
+Caused by: java.io.EOFException
+	at org.h2.store.fs.FileUtils.readFully(FileUtils.java:358)
+	at org.h2.store.FileStore.readFully(FileStore.java:273)
+	... 8 more
+2016-09-28 16:00:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+SELECT VERSION FROM CONFIGURACION [42102-192]
+2016-09-28 16:01:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+SELECT VERSION FROM CONFIGURACION [42102-192]
+2016-09-28 16:02:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+SELECT VERSION FROM CONFIGURACION [42102-192]
+2016-09-28 16:02:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Columna "1.1" no encontrada
+Column "1.1" not found; SQL statement:
+INSERT INTO CONFIGURACION VALUES ("1.1") [42122-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:147)
+	at org.h2.command.dml.Insert.prepare(Insert.java:270)
+	at org.h2.command.Parser.prepareCommand(Parser.java:259)
+	at org.h2.engine.Session.prepareLocal(Session.java:560)
+	at org.h2.engine.Session.prepareCommand(Session.java:501)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1202)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:170)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:158)
+	at datos.BD.<clinit>(BD.java:56)
+	at datos.DAOAsignatura.<init>(DAOAsignatura.java:28)
+	at datos.DAOAsignatura.<clinit>(DAOAsignatura.java:13)
+	at interfaz.ControladorAlumnos$ControladorAlumnoClase.<init>(ControladorAlumnos.java:495)
+	at interfaz.ControladorAlumnos.initialize(ControladorAlumnos.java:279)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2548)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2441)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3214)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3175)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3148)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3124)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3104)
+	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:3097)
+	at interfaz.Controlador.<init>(Controlador.java:51)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at java.lang.Class.newInstance(Class.java:442)
+	at sun.reflect.misc.ReflectUtil.newInstance(ReflectUtil.java:51)
+	at javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:927)
+	at javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:971)
+	at javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:220)
+	at javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:744)
+	at javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2707)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2527)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:2441)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3214)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3175)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3148)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3124)
+	at javafx.fxml.FXMLLoader.loadImpl(FXMLLoader.java:3104)
+	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:3097)
+	at aplicacion.AkaGest.start(AkaGest.java:51)
+	at com.sun.javafx.application.LauncherImpl.lambda$launchApplication1$162(LauncherImpl.java:863)
+	at com.sun.javafx.application.PlatformImpl.lambda$runAndWait$175(PlatformImpl.java:326)
+	at com.sun.javafx.application.PlatformImpl.lambda$null$173(PlatformImpl.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.application.PlatformImpl.lambda$runLater$174(PlatformImpl.java:294)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
+	at com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
+	at com.sun.glass.ui.gtk.GtkApplication.lambda$null$49(GtkApplication.java:139)
+	at java.lang.Thread.run(Thread.java:745)
+2016-09-28 16:55:30 database: close
+org.h2.message.DbException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.get(DbException.java:168)
+	at org.h2.message.DbException.convertIOException(DbException.java:330)
+	at org.h2.store.FileStore.readFully(FileStore.java:275)
+	at org.h2.store.PageStore.readPage(PageStore.java:1325)
+	at org.h2.store.PageStore.getPage(PageStore.java:749)
+	at org.h2.store.PageStreamTrunk$Iterator.next(PageStreamTrunk.java:251)
+	at org.h2.store.PageLog.free(PageLog.java:213)
+	at org.h2.store.PageStore.compact(PageStore.java:498)
+	at org.h2.engine.Database.closeOpenFilesAndUnlock(Database.java:1359)
+	at org.h2.engine.Database.close(Database.java:1289)
+	at org.h2.engine.DatabaseCloser.run(DatabaseCloser.java:63)
+Caused by: org.h2.jdbc.JdbcSQLException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	... 11 more
+Caused by: java.io.EOFException
+	at org.h2.store.fs.FileUtils.readFully(FileUtils.java:358)
+	at org.h2.store.FileStore.readFully(FileStore.java:273)
+	... 8 more
+2016-09-28 16:55:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+SELECT VERSION FROM CONFIGURACION [42102-192]
+2016-09-28 16:58:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+DROP TABLE CONFIGURACION [42102-192]
+2016-09-28 16:58:30 database: close
+org.h2.message.DbException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.get(DbException.java:168)
+	at org.h2.message.DbException.convertIOException(DbException.java:330)
+	at org.h2.store.FileStore.readFully(FileStore.java:275)
+	at org.h2.store.PageStore.readPage(PageStore.java:1325)
+	at org.h2.store.PageStore.getPage(PageStore.java:749)
+	at org.h2.store.PageStreamTrunk$Iterator.next(PageStreamTrunk.java:251)
+	at org.h2.store.PageLog.free(PageLog.java:213)
+	at org.h2.store.PageStore.compact(PageStore.java:498)
+	at org.h2.engine.Database.closeOpenFilesAndUnlock(Database.java:1359)
+	at org.h2.engine.Database.close(Database.java:1289)
+	at org.h2.engine.Database.removeSession(Database.java:1173)
+	at org.h2.engine.Session.close(Session.java:825)
+	at org.h2.jdbc.JdbcConnection.close(JdbcConnection.java:397)
+	at org.h2.server.web.WebApp.logout(WebApp.java:981)
+	at org.h2.server.web.WebApp.process(WebApp.java:215)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:170)
+	at org.h2.server.web.WebThread.process(WebThread.java:133)
+	at org.h2.server.web.WebThread.run(WebThread.java:89)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.h2.jdbc.JdbcSQLException: IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db"
+IO Exception: "java.io.EOFException"; "/home/mjaque/workspace/akagest/akagest.h2.db" [90031-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	... 19 more
+Caused by: java.io.EOFException
+	at org.h2.store.fs.FileUtils.readFully(FileUtils.java:358)
+	at org.h2.store.FileStore.readFully(FileStore.java:273)
+	... 16 more
+2016-09-28 16:58:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CONFIGURACION" no encontrada
+Table "CONFIGURACION" not found; SQL statement:
+SELECT VERSION FROM CONFIGURACION [42102-192]

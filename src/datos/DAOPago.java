@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import interfaz.Controlador;
 import negocio.Alumno;
@@ -157,5 +159,5 @@ public enum DAOPago {
 		rs.close();
 		return resultado;
 	}
-
+	
 }

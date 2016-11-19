@@ -1,15 +1,20 @@
 package aplicacion;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
-import interfaz.IU;
+import interfaz.Controlador;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import util.Log;
 
 //Versión 1:
 //TODO: Evitar warning de css (-fx-background-color
 //TODO: Bug. Limpiar el formulario de Alumno cuando no hay ninguno seleccionado. No reproducido.
-//TODO: Meter en GitHub.
+//TODO: Bug. Al cerrar la app, cerrar los posibles diálogos abiertos.
+//TODO: Lista de Espera.
 
 //Versión 2:
 //TODO: View de ComboBox con buscador. Utilizarlo en Clases.Alumno.
@@ -17,7 +22,9 @@ import util.Log;
 //TODO: Diseñar e implementar Lista de Espera.
 //TODO: Reinicio de la base de datos.
 
-public class AkaGest{
+public class AkaGest extends Application{
+	
+	private static Controlador controlador;
 	
 	public static void main(String[] args){
 		try {
@@ -28,11 +35,36 @@ public class AkaGest{
 			Log.log(Log.Nivel.INFO, "Directorio de Trabajo: " + dirTrabajo);
 			System.setProperty("com.19e37.akagest.BD_URL", "jdbc:h2:"+dirTrabajo+File.separatorChar+"akagest;MV_STORE=FALSE;MVCC=FALSE");
 			Log.log(Log.Nivel.INFO, "BD_URL: " + System.getProperty("com.19e37.akagest.BD_URL"));
-			IU.iniciar(args);
+			Application.launch(args);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("\nImposible arracar AkaGest.\n");
 		}
+	}
+	
+	@Override
+	public void start(Stage escenario) throws Exception {
+		try {
+			escenario.setTitle("Gestión de Academia - 19e37");
+			
+			//Esta llamada establece el controlador principal.
+			Pane panelPrincipal = FXMLLoader.load(this.getClass().getResource("/interfaz/fxml/Interfaz.fxml"));
+			Scene escena = new Scene(panelPrincipal);
+			escena.getStylesheets().add(getClass().getResource("/interfaz/fxml/interfaz.css").toExternalForm());
+			escenario.setScene(escena);
+			escenario.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Controlador.lanzarExcepcion(e.getMessage());
+		}
+	}
+	
+	public static void setControlador(Controlador controlador){
+		AkaGest.controlador = controlador;
+	}
+	
+	public static Controlador getControlador(){
+		return AkaGest.controlador; 
 	}
 
 }

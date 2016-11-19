@@ -3,6 +3,7 @@ package negocio;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import datos.DAOClase;
 import javafx.beans.property.BooleanProperty;
@@ -144,6 +145,13 @@ public class Clase {
 	public Clase copiar() throws Exception{
 		return new Clase(this);
 	}
+
+	public static DateTimeFormatter getFormateadorHora() {
+		return DateTimeFormatter.ofPattern("H:mm");
+	}
 	
+	public Float getPrecioTotal(){
+		return this.getDuracion() * this.getPrecioHora();
+	}
 	
 }
