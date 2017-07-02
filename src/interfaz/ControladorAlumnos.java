@@ -27,6 +27,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
@@ -118,6 +119,8 @@ public class ControladorAlumnos
 	private StackPane spBotones;
 	@FXML
 	private Pane pAceptarCancelar, pEditarBorrarNuevo;
+	@FXML
+	private DatePicker dpAlta, dpBaja;
 	@FXML
 	private Button btnAlumnoBorrar, btnAlumnoEditar, btnAlumnoNuevo, btnAlumnoAceptar, btnAlumnoCancelar,
 			btnClasesBorrar, btnClasesInsertar, btnClaseCopiar, btnPagosBorrar, btnPagosInsertar;
@@ -367,6 +370,8 @@ public class ControladorAlumnos
 		this.tfCentroEstudios.clear();
 		this.taDatosProgenitor.clear();
 		this.taNotas.clear();
+		this.dpAlta.setValue(LocalDate.now());
+		this.dpBaja.setValue(null);
 	}
 
 	private void actualizarTablaAlumnos() throws Exception {
@@ -396,6 +401,8 @@ public class ControladorAlumnos
 		this.tfCentroEstudios.setEditable(b);
 		this.taDatosProgenitor.setEditable(b);
 		this.taNotas.setEditable(b);
+		this.dpAlta.setDisable(!b);
+		this.dpBaja.setDisable(!b);
 	}
 
 	private void actualizar(Alumno alumno) throws Exception {
@@ -407,6 +414,8 @@ public class ControladorAlumnos
 			alumno.setCentroEstudios(tfCentroEstudios.getText());
 			alumno.setDatosProgenitor(taDatosProgenitor.getText());
 			alumno.setNotas(taNotas.getText());
+			alumno.setFechaAlta(dpAlta.getValue());
+			alumno.setFechaBaja(dpBaja.getValue());
 			alumno.guardar();
 		}
 	}
@@ -420,6 +429,8 @@ public class ControladorAlumnos
 		this.tfCentroEstudios.setText(alumno.getCentroEstudios());
 		this.taDatosProgenitor.setText(alumno.getDatosProgenitor());
 		this.taNotas.setText(alumno.getNotas());
+		this.dpAlta.setValue(alumno.getFechaAlta());
+		this.dpBaja.setValue(alumno.getFechaBaja());
 		this.cargarClases(alumno);
 		this.cargarPagos(alumno);
 	}

@@ -1,5 +1,8 @@
 package negocio;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import datos.DAOAlumno;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,6 +18,8 @@ public class Alumno {
 	private StringProperty centroEstudios = new SimpleStringProperty();
 	private StringProperty datosProgenitor = new SimpleStringProperty();
 	private StringProperty notas = new SimpleStringProperty();
+	private LocalDate fechaAlta;
+	private LocalDate fechaBaja;
 	
 	private DAOAlumno dao;
 	
@@ -131,6 +136,22 @@ public class Alumno {
 	@Override
 	public String toString() {
 		return nombreCompleto.get() + " (" + id.get() + ")";
+	}
+
+	public void setFechaAlta(LocalDate fechaAlta) {
+		this.fechaAlta = fechaAlta;
+	}
+	
+	public LocalDate getFechaAlta() {
+		return this.fechaAlta;
+	}
+	
+	public void setFechaBaja(LocalDate fechaBaja) {
+		this.fechaBaja = fechaBaja;
+	}
+	
+	public LocalDate getFechaBaja() {
+		return this.fechaBaja;
 	}
 	
 	

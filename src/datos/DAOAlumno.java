@@ -1,9 +1,11 @@
 package datos;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import interfaz.Controlador;
@@ -14,19 +16,19 @@ public enum DAOAlumno {
 	
 	private final String TABLA = "ALUMNO";
 	//private final String COLUMNAS = TABLA + ".ID, " + TABLA + ".NIF, " + TABLA + ".NOMBRE_COMPLETO, " + TABLA + ".EMAIL, " + TABLA + ".TELEFONOS, " + TABLA + ".CENTRO_ESTUDIOS, " + TABLA + ".DATOS_PROGENITOR, " + TABLA + ".NOTAS";
-	private final String COLUMNAS = "ID, NIF, NOMBRE_COMPLETO, EMAIL, TELEFONOS, CENTRO_ESTUDIOS, DATOS_PROGENITOR, NOTAS";
+	private final String COLUMNAS = "ID, NIF, NOMBRE_COMPLETO, EMAIL, TELEFONOS, CENTRO_ESTUDIOS, DATOS_PROGENITOR, NOTAS, FECHA_ALTA, FECHA_BAJA";
 	private final String SQL_CARGAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE ID=?";
 	private final String SQL_INSERTAR = "INSERT INTO " + TABLA + " (" + COLUMNAS
-			+ ") VALUES (NULL,?,?,?,?,?,?,?)";
+			+ ") VALUES (NULL,?,?,?,?,?,?,?,?,?)";
 	private final String SQL_ACTUALIZAR = "UPDATE " + TABLA + " SET (" + COLUMNAS
-			+ ") = (?,?,?,?,?,?,?,?) WHERE ID=?";
+			+ ") = (?,?,?,?,?,?,?,?,?,?) WHERE ID=?";
 	private final String SQL_BORRAR = "DELETE FROM " + TABLA + " WHERE ID=?";
 	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " ORDER BY UPPER(NOMBRE_COMPLETO) ASC";
 	private final String SQL_BUSCAR_POR_ID = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE ID = ?";
 	private final String SQL_BUSCAR_POR_NOMBRE = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE UPPER(NOMBRE_COMPLETO) LIKE ?";
 	//private this.final String SQL_BUSCAR_HOY = "SELECT " + COLUMNAS + " FROM " + TABLA + " JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() "
 	//		+ "ORDER BY CLASE.HORA ASC";
-	private final String SQL_BUSCAR_HOY = "SELECT ALUMNO.ID, ALUMNO.NIF, ALUMNO.NOMBRE_COMPLETO, ALUMNO.EMAIL, ALUMNO.TELEFONOS, ALUMNO.CENTRO_ESTUDIOS, ALUMNO.DATOS_PROGENITOR, ALUMNO.NOTAS FROM ALUMNO JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() ORDER BY CLASE.HORA ASC";
+	private final String SQL_BUSCAR_HOY = "SELECT ALUMNO.ID, ALUMNO.NIF, ALUMNO.NOMBRE_COMPLETO, ALUMNO.EMAIL, ALUMNO.TELEFONOS, ALUMNO.CENTRO_ESTUDIOS, ALUMNO.DATOS_PROGENITOR, ALUMNO.NOTAS, ALUMNO.FECHA_ALTA, ALUMNO.FECHA_BAJA FROM ALUMNO JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() ORDER BY CLASE.HORA ASC";
 	private PreparedStatement psInsertar, psActualizar, psBorrar, psCargar, psListar, psBuscarPorId, psBuscarPorNombre, psBuscarHoy;
 
 	private DAOAlumno(){
@@ -46,16 +48,19 @@ public enum DAOAlumno {
 	}
 
 	private void actualizar(Alumno alumno) throws Exception {
-		this.psActualizar.setInt(1, alumno.getId());
-		this.psActualizar.setString(2, alumno.getNif());
-		this.psActualizar.setString(3, alumno.getNombreCompleto());
-		this.psActualizar.setString(4, alumno.getEmail());
-		this.psActualizar.setString(5, alumno.getTelefonos());
-		System.out.println("alumno.getTelefonos() = " + alumno.getTelefonos());
-		this.psActualizar.setString(6, alumno.getCentroEstudios());
-		this.psActualizar.setString(7, alumno.getDatosProgenitor());
-		this.psActualizar.setString(8, alumno.getNotas());
-		this.psActualizar.setInt(9, alumno.getId());
+		int i = 1;
+		this.psActualizar.setInt(i++, alumno.getId());
+		this.psActualizar.setString(i++, alumno.getNif());
+		this.psActualizar.setString(i++, alumno.getNombreCompleto());
+		this.psActualizar.setString(i++, alumno.getEmail());
+		this.psActualizar.setString(i++, alumno.getTelefonos());
+		//System.out.println("alumno.getTelefonos() = " + alumno.getTelefonos());
+		this.psActualizar.setString(i++, alumno.getCentroEstudios());
+		this.psActualizar.setString(i++, alumno.getDatosProgenitor());
+		this.psActualizar.setString(i++, alumno.getNotas());
+		this.psActualizar.setDate(i++, Date.valueOf(alumno.getFechaAlta()));
+		this.psActualizar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
+		this.psActualizar.setInt(i++, alumno.getId());
 		this.psActualizar.execute();
 	}
 
@@ -88,13 +93,16 @@ public enum DAOAlumno {
 	}
 
 	private void insertar(Alumno alumno) throws Exception {
-		this.psInsertar.setString(1, alumno.getNif());
-		this.psInsertar.setString(2, alumno.getNombreCompleto());
-		this.psInsertar.setString(3, alumno.getEmail());
-		this.psInsertar.setString(4, alumno.getTelefonos());
-		this.psInsertar.setString(5, alumno.getCentroEstudios());
-		this.psInsertar.setString(6, alumno.getDatosProgenitor());
-		this.psInsertar.setString(7, alumno.getNotas());
+		int i = 1;
+		this.psInsertar.setString(i++, alumno.getNif());
+		this.psInsertar.setString(i++, alumno.getNombreCompleto());
+		this.psInsertar.setString(i++, alumno.getEmail());
+		this.psInsertar.setString(i++, alumno.getTelefonos());
+		this.psInsertar.setString(i++, alumno.getCentroEstudios());
+		this.psInsertar.setString(i++, alumno.getDatosProgenitor());
+		this.psInsertar.setString(i++, alumno.getNotas());
+		this.psInsertar.setDate(i++, Date.valueOf(alumno.getFechaAlta()));
+		this.psInsertar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
 		this.psInsertar.execute();
 		ResultSet rsNuevosIds = psInsertar.getGeneratedKeys();
 		if (rsNuevosIds.first()) {
@@ -173,6 +181,10 @@ public enum DAOAlumno {
 		item.setCentroEstudios(rs.getString("CENTRO_ESTUDIOS"));
 		item.setDatosProgenitor(rs.getString("DATOS_PROGENITOR"));
 		item.setNotas(rs.getString("NOTAS"));
+		if(rs.getDate("FECHA_ALTA") != null)
+			item.setFechaAlta(rs.getDate("FECHA_ALTA").toLocalDate());
+		if(rs.getDate("FECHA_BAJA") != null)
+			item.setFechaBaja(rs.getDate("FECHA_BAJA").toLocalDate());
 		return item;
 	}
 
