@@ -58,8 +58,14 @@ public enum DAOAlumno {
 		this.psActualizar.setString(i++, alumno.getCentroEstudios());
 		this.psActualizar.setString(i++, alumno.getDatosProgenitor());
 		this.psActualizar.setString(i++, alumno.getNotas());
-		this.psActualizar.setDate(i++, Date.valueOf(alumno.getFechaAlta()));
-		this.psActualizar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
+		if (alumno.getFechaAlta() != null)
+			this.psActualizar.setDate(i++, Date.valueOf(alumno.getFechaAlta()));
+		else
+			this.psActualizar.setDate(i++, null);
+		if (alumno.getFechaBaja() != null)
+			this.psActualizar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
+		else
+			this.psActualizar.setDate(i++, null);
 		this.psActualizar.setInt(i++, alumno.getId());
 		this.psActualizar.execute();
 	}
@@ -101,8 +107,14 @@ public enum DAOAlumno {
 		this.psInsertar.setString(i++, alumno.getCentroEstudios());
 		this.psInsertar.setString(i++, alumno.getDatosProgenitor());
 		this.psInsertar.setString(i++, alumno.getNotas());
-		this.psInsertar.setDate(i++, Date.valueOf(alumno.getFechaAlta()));
-		this.psInsertar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
+		if (alumno.getFechaAlta() != null)
+			this.psInsertar.setDate(i++, Date.valueOf(alumno.getFechaAlta()));
+		else
+			this.psInsertar.setDate(i++, null);
+		if (alumno.getFechaBaja() != null)
+			this.psInsertar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
+		else
+			this.psInsertar.setDate(i++, null);
 		this.psInsertar.execute();
 		ResultSet rsNuevosIds = psInsertar.getGeneratedKeys();
 		if (rsNuevosIds.first()) {

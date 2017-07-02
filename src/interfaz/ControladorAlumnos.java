@@ -32,6 +32,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -297,6 +298,20 @@ public class ControladorAlumnos
 			tcAlumnoCentroEstudios.setOnEditCommit(this);
 			tvAlumnos.getSelectionModel().selectedItemProperty().addListener(this);
 			actualizarTablaAlumnos();
+			
+			//Decoramos la tabla según el estado del alumno
+			tvAlumnos.setRowFactory(tv -> new TableRow<Alumno>() {
+			    @Override
+			    public void updateItem(Alumno item, boolean empty) {
+			        super.updateItem(item, empty) ;
+			        if (item == null) {
+			            setStyle("");
+			        } else if (item.getFechaBaja() != null){
+			        	if (item.getFechaBaja().isBefore(LocalDate.now()))
+			        		setStyle("-fx-background-color: gainsboro;");
+			        }
+			    }
+			});
 
 			// //Campo de Búsqueda
 			tfBuscar.focusedProperty().addListener((observable, oldValue, newValue) -> {
