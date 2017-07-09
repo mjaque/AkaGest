@@ -7,10 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import interfaz.Controlador;
 import negocio.Alumno;
@@ -31,12 +32,13 @@ public enum DAOClase {
 	private final String SQL_ACTUALIZAR = "UPDATE " + TABLA + " SET (" + COLUMNAS
 			+ ") = (?,?,?,?,?,?,?,?,?,?) WHERE ID=?";
 	private final String SQL_BORRAR = "DELETE FROM " + TABLA + " WHERE ID=?";
-	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " ORDER BY FECHA, HORA ASC";
+	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE ID_ALUMNO != 30 ORDER BY FECHA, HORA ASC";
 	private final String SQL_LISTAR_POR_ALUMNO = "SELECT " + COLUMNAS + " FROM " + TABLA
 			+ " WHERE ID_ALUMNO = ? ORDER BY FECHA DESC, HORA DESC";
 	private final String SQL_CONTRATADO_POR_ALUMNO = "SELECT SUM(PRECIO * DURACION) FROM " + TABLA
 			+ " WHERE ID_ALUMNO = ?";
-	private final String SQL_PAGOS_MES = "SELECT  MONTH(FECHA), SUM (DURACION * PRECIO)  FROM " + TABLA + " GROUP BY MONTH(FECHA) ORDER BY 1";
+	//private final String SQL_PAGOS_MES = "SELECT MONTH(FECHA), SUM (DURACION * PRECIO)  FROM " + TABLA + " GROUP BY MONTH(FECHA) ORDER BY 1";
+	private final String SQL_PAGOS_MES = "SELECT YEAR(FECHA), MONTH(FECHA), SUM (DURACION * PRECIO)  FROM CLASE GROUP BY YEAR(FECHA), MONTH(FECHA) ORDER BY 1,2";
 	
 	private PreparedStatement psCargar, psInsertar, psActualizar, psBorrar, psListar, psListarPorAlumno, psBuscar, psContratadoPorAlumno, psPagosMes;
 
@@ -172,12 +174,12 @@ public enum DAOClase {
 		return item;
 	}
 	
-	public Map<Integer, Float> verPagosPorMes() throws Exception{
-		Map<Integer, Float> resultado = new HashMap<>();
+	public Map<LocalDate, Float> verPagosPorMes() throws Exception{
+		Map<LocalDate, Float> resultado = new TreeMap<>();
 
 		ResultSet rs = this.psPagosMes.executeQuery();
 		while (rs.next())
-			resultado.put(rs.getInt(1), rs.getFloat(2));
+			resultado.put(LocalDate.of(rs.getInt(1), rs.getInt(2), 1), rs.getFloat(3));
 		
 		rs.close();
 		return resultado;

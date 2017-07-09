@@ -308,7 +308,7 @@ public class ControladorAlumnos
 			            setStyle("");
 			        } else if (item.getFechaBaja() != null){
 			        	if (item.getFechaBaja().isBefore(LocalDate.now()))
-			        		setStyle("-fx-background-color: gainsboro;");
+			        		setStyle("-fx-background-color: tomato;");
 			        }
 			    }
 			});

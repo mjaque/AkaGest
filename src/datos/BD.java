@@ -87,17 +87,19 @@ public enum BD {
 	}
 
 	private void crearBD() {
-		Log.log(Log.Nivel.INFO, "Creando base de datos.");
-		try {
-			Statement sentencia = this.conexion.createStatement();
-			sentencia.execute(CREATE_ALUMNO);
-			sentencia.execute(CREATE_ASIGNATURA);
-			sentencia.execute(CREATE_CLASE);
-			sentencia.execute(CREATE_TIPO_OPERACION);
-			sentencia.execute(CREATE_PAGO);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Log.log(Log.Nivel.ERROR_FATAL, "No existe la BBDD.");
+		System.exit(-1);
+//		Log.log(Log.Nivel.INFO, "Creando base de datos.");
+//		try {
+//			Statement sentencia = this.conexion.createStatement();
+//			sentencia.execute(CREATE_ALUMNO);
+//			sentencia.execute(CREATE_ASIGNATURA);
+//			sentencia.execute(CREATE_CLASE);
+//			sentencia.execute(CREATE_TIPO_OPERACION);
+//			sentencia.execute(CREATE_PAGO);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

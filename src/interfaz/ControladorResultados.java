@@ -1,6 +1,7 @@
 package interfaz;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,16 +27,16 @@ public class ControladorResultados implements Initializable {
 
 	private String[][] datos = {
 			{ "Curso", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero", "Febrero", "Marzo", "Abril", "Mayo",
-					"Junio", "Julio", "Agosto", "Anual" },
-			{ "2012-13", "0 €", "	0 €", "	0 €", "	160 €", "	342 €", "	666 €", "	934 €", "	1.134 €",
-					"	1.239 €", "	1.465 €", "	1.736 €", "	665 €", "	8.340 €" },
-			{ "2013-14", "577 €", "	1.946 €", "	2.133 €", "	1.701 €", "	2.850 €", "	1.933 €", "	2.419 €", "	2.581 €",
-					"	3.044 €", "	2.351 €", "	2.269 €", "	0 €", "	23.804 €" },
-			{ "2014-15", "2.163 €", "	2.263 €", "	2.991 €", "	1.967 €", "	2.461 €", "	2.408 €", "	3.265 €",
-					"	2.864 €", "	3.757 €", "	2.568 €", "	2.519 €", "	0 €", "	29.225 €" },
-			{ "2015-16", "1.533 €", "	2.612 €", "	3.261 €", "	1.978 €", "	2.778 €", "	2.412 €", "	2.916 €",
-					"	3.113 €", "	3.957 €", "	2.749 €", "	3.050 €", "	900 €", "	31.259 €" }
-			};
+					"Junio", "Julio", "Agosto", "Anual" }};
+//			{ "2012-13", "0 €", "	0 €", "	0 €", "	160 €", "	342 €", "	666 €", "	934 €", "	1.134 €",
+//					"	1.239 €", "	1.465 €", "	1.736 €", "	665 €", "	8.340 €" },
+//			{ "2013-14", "577 €", "	1.946 €", "	2.133 €", "	1.701 €", "	2.850 €", "	1.933 €", "	2.419 €", "	2.581 €",
+//					"	3.044 €", "	2.351 €", "	2.269 €", "	0 €", "	23.804 €" },
+//			{ "2014-15", "2.163 €", "	2.263 €", "	2.991 €", "	1.967 €", "	2.461 €", "	2.408 €", "	3.265 €",
+//					"	2.864 €", "	3.757 €", "	2.568 €", "	2.519 €", "	0 €", "	29.225 €" },
+//			{ "2015-16", "1.533 €", "	2.612 €", "	3.261 €", "	1.978 €", "	2.778 €", "	2.412 €", "	2.916 €",
+//					"	3.113 €", "	3.957 €", "	2.749 €", "	3.050 €", "	900 €", "	31.259 €" }
+//			};
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -60,25 +61,40 @@ public class ControladorResultados implements Initializable {
 			tc.setPrefWidth(110);
 			table.getColumns().add(tc);
 		}
-		//Añadimos los datos de este año
-		String[] datosActuales = new String[14];
-		datosActuales[0] = "2016-17";
+		//Cargamos los datos de cada año
+		int curso = 2012;
+		Double totalAnual = 0d;
+		String[] datosCurso = new String[14];
+		datosCurso[0] = String.valueOf(curso) + "-" + String.valueOf((curso + 1) % 100);
 		try {
-			Map<Integer, Float> datos = DAOClase.INSTANCE.verPagosPorMes();
-			Double totalAnual = 0d;
-			for(Entry<Integer, Float> dato: datos.entrySet()){
+			Map<LocalDate, Float> datos = DAOClase.INSTANCE.verPagosPorMes();
+			for(Entry<LocalDate, Float> dato: datos.entrySet()){
 				int modificador = -8;
-				if (dato.getKey()<9)
-					modificador = 5;
-				datosActuales[dato.getKey()+ modificador] = String.valueOf(dato.getValue()) + "€";
+				if (dato.getKey().getMonthValue() < 9){
+					modificador = 4;
+				}
+				if(dato.getKey().getMonthValue() == 9){
+					//Cambio de curso
+					datosCurso[13] = totalAnual + "€";
+					totalAnual = 0d;
+					data.add(datosCurso);
+					curso++;
+					datosCurso = new String[14];
+					datosCurso[0] = String.valueOf(curso) + "-" + String.valueOf((curso + 1) % 100);
+				}
+				int mes = dato.getKey().getMonthValue()+ modificador;
+				int year = dato.getKey().getYear();
+				datosCurso[mes] = String.valueOf(dato.getValue()) + "€";
 				totalAnual += dato.getValue();
 			}
-			datosActuales[13] = String.valueOf(Math.round(totalAnual*100) /100) + "€";
+			//Grabamos el último
+			datosCurso[13] = totalAnual + "€";
+			totalAnual = 0d;
+			data.add(datosCurso);
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
-		data.add(datosActuales);
 		table.setItems(data);
 		this.panelTablaResultados.setContent(table);
 	}
