@@ -19,7 +19,7 @@ import negocio.Clase;
 
 public enum DAOClase {
 	INSTANCE;
-	
+
 	// ID int primary key auto_increment, ID_ALUMNO int, ID_ASIGNATURA int
 	// REFERENCES ASIGNATURA, FECHA date, HORA time, DURACION decimal(5,2),
 	// PRECIO decimal(5,2), ID_ESTADO int REFERENCES ESTADO_CLASE, ASISTENCIA
@@ -27,22 +27,24 @@ public enum DAOClase {
 	private final String TABLA = "CLASE";
 	private final String COLUMNAS = "ID, ID_ALUMNO, ID_ASIGNATURA, FECHA, HORA, DURACION, PRECIO, ESTADO, ASISTENCIA, NOTAS";
 	private final String SQL_CARGAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE ID=?";
-	private final String SQL_INSERTAR = "INSERT INTO " + TABLA + " (" + COLUMNAS
-			+ ") VALUES (NULL,?,?,?,?,?,?,?,?,?)";
+	private final String SQL_INSERTAR = "INSERT INTO " + TABLA + " (" + COLUMNAS + ") VALUES (NULL,?,?,?,?,?,?,?,?,?)";
 	private final String SQL_ACTUALIZAR = "UPDATE " + TABLA + " SET (" + COLUMNAS
 			+ ") = (?,?,?,?,?,?,?,?,?,?) WHERE ID=?";
 	private final String SQL_BORRAR = "DELETE FROM " + TABLA + " WHERE ID=?";
-	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE ID_ALUMNO != 30 ORDER BY FECHA, HORA ASC";
+	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA
+			+ " WHERE ID_ALUMNO != 30 ORDER BY FECHA, HORA ASC";
 	private final String SQL_LISTAR_POR_ALUMNO = "SELECT " + COLUMNAS + " FROM " + TABLA
 			+ " WHERE ID_ALUMNO = ? ORDER BY FECHA DESC, HORA DESC";
 	private final String SQL_CONTRATADO_POR_ALUMNO = "SELECT SUM(PRECIO * DURACION) FROM " + TABLA
 			+ " WHERE ID_ALUMNO = ?";
-	//private final String SQL_PAGOS_MES = "SELECT MONTH(FECHA), SUM (DURACION * PRECIO)  FROM " + TABLA + " GROUP BY MONTH(FECHA) ORDER BY 1";
+	// private final String SQL_PAGOS_MES = "SELECT MONTH(FECHA), SUM (DURACION
+	// * PRECIO) FROM " + TABLA + " GROUP BY MONTH(FECHA) ORDER BY 1";
 	private final String SQL_PAGOS_MES = "SELECT YEAR(FECHA), MONTH(FECHA), SUM (DURACION * PRECIO)  FROM CLASE GROUP BY YEAR(FECHA), MONTH(FECHA) ORDER BY 1,2";
-	
-	private PreparedStatement psCargar, psInsertar, psActualizar, psBorrar, psListar, psListarPorAlumno, psBuscar, psContratadoPorAlumno, psPagosMes;
 
-	private DAOClase(){
+	private PreparedStatement psCargar, psInsertar, psActualizar, psBorrar, psListar, psListarPorAlumno, psBuscar,
+			psContratadoPorAlumno, psPagosMes;
+
+	private DAOClase() {
 		try {
 			this.psListar = BD.INSTANCE.getConexion().prepareStatement(SQL_LISTAR);
 			this.psListarPorAlumno = BD.INSTANCE.getConexion().prepareStatement(SQL_LISTAR_POR_ALUMNO);
@@ -121,33 +123,33 @@ public enum DAOClase {
 		ArrayList<Clase> resultado = new ArrayList<>();
 
 		ResultSet rs = this.psListar.executeQuery();
-		while (rs.next()) 
+		while (rs.next())
 			resultado.add(this.get(rs));
-		
+
 		rs.close();
 		return resultado;
 	}
-	
+
 	public ArrayList<Clase> listarPorAlumno(Alumno alumno) throws Exception {
 		ArrayList<Clase> resultado = new ArrayList<>();
 
 		this.psListarPorAlumno.setInt(1, alumno.getId());
 		ResultSet rs = this.psListarPorAlumno.executeQuery();
-		while (rs.next()) 
+		while (rs.next())
 			resultado.add(this.get(rs));
-		
+
 		rs.close();
 		return resultado;
 	}
-	
-	public Float verContratadoAlumno(Alumno alumno) throws Exception{
+
+	public Float verContratadoAlumno(Alumno alumno) throws Exception {
 		Float resultado = null;
 
 		this.psContratadoPorAlumno.setInt(1, alumno.getId());
 		ResultSet rs = this.psContratadoPorAlumno.executeQuery();
-		if (rs.next()) 
+		if (rs.next())
 			resultado = rs.getFloat(1);
-			
+
 		rs.close();
 		return resultado;
 	}
@@ -157,33 +159,33 @@ public enum DAOClase {
 		this.psBorrar.execute();
 
 	}
-	
-	private Clase get(ResultSet rs) throws Exception{
+
+	private Clase get(ResultSet rs) throws Exception {
 		Clase item = new Clase();
 		item.setId(rs.getInt("ID"));
-		//TODO: Mejora. Consulta SQL anidada en bucle.
+		// TODO: Mejora. Consulta SQL anidada en bucle.
 		item.setAlumno(DAOAlumno.INSTANCE.buscarPorId(rs.getInt("ID_ALUMNO")));
-		//TODO: Mejora. Consulta SQL anidada en bucle.			
+		// TODO: Mejora. Consulta SQL anidada en bucle.
 		item.setAsignatura(DAOAsignatura.INSTANCE.buscarPorId(rs.getInt("ID_ASIGNATURA")));
 		item.setFechaHora(LocalDateTime.of(rs.getDate("FECHA").toLocalDate(), rs.getTime("HORA").toLocalTime()));
 		item.setDuracion(rs.getFloat("DURACION"));
 		item.setPrecioHora(rs.getFloat("PRECIO"));
-		item.setEstado(Clase.Estado.valueOf(rs.getString("ESTADO")));
+		if (rs.getString("ESTADO") != null)
+			item.setEstado(Clase.Estado.valueOf(rs.getString("ESTADO")));
 		item.setAsistencia(rs.getBoolean("ASISTENCIA"));
 		item.setNotas(rs.getString("NOTAS"));
 		return item;
 	}
-	
-	public Map<LocalDate, Float> verPagosPorMes() throws Exception{
+
+	public Map<LocalDate, Float> verPagosPorMes() throws Exception {
 		Map<LocalDate, Float> resultado = new TreeMap<>();
 
 		ResultSet rs = this.psPagosMes.executeQuery();
 		while (rs.next())
 			resultado.put(LocalDate.of(rs.getInt(1), rs.getInt(2), 1), rs.getFloat(3));
-		
+
 		rs.close();
 		return resultado;
 	}
-
 
 }
