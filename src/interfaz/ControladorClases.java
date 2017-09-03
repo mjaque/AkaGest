@@ -95,7 +95,7 @@ public class ControladorClases implements Actualizable, Initializable, ChangeLis
 
 	@FXML
 	protected void copiarClase(ActionEvent event) throws Exception {
-		ChoiceDialog<Alumno> dialog = new ChoiceDialog<>(null, DAOAlumno.INSTANCE.listar());
+		ChoiceDialog<Alumno> dialog = new ChoiceDialog<>(null, DAOAlumno.INSTANCE.listar(true));
 		dialog.setSelectedItem(this.tvClases.getSelectionModel().getSelectedItem().getAlumno());
 		dialog.setTitle("Elección de Alumno");
 		dialog.setHeaderText(null);

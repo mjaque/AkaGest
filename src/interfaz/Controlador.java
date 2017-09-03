@@ -105,8 +105,8 @@ public class Controlador implements Initializable {
 	public void verAcercaDe(ActionEvent event){
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Acerca de AkaGest");
-		alert.setHeaderText("AkaGest v4\nCreado por Miguel Jaque (mjaque@migueljaque.com)");
-		alert.setContentText("Este programa se distribuye bajo los términos de la licencia GPL v3, que puede consultarse en www.gnu.org");
+		alert.setHeaderText("AkaGest " + AkaGest.VERSION + "\nCreado por Miguel Jaque (mjaque@migueljaque.com)");
+		alert.setContentText("Este programa se distribuye bajo los términos de la licencia GPL v3, que puede consultarse en www.gnu.org\nPuedes acceder al código en https://github.com/mjaque/AkaGest");
 		//Workarround para evitar que el texto salga cortado
 		alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node-> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
 		alert.showAndWait();

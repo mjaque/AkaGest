@@ -24,6 +24,8 @@ import util.Log;
 
 public class AkaGest extends Application{
 	
+	public static final String VERSION = "4.2";
+	
 	private static Controlador controlador;
 	
 	public static void main(String[] args){

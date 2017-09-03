@@ -26,6 +26,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -66,6 +67,8 @@ public class ControladorAlumnos
 	// Componentes del Subpanel superior - Tabla de Alumnos
 	@FXML
 	Button btnHoy;
+	@FXML
+	CheckBox cbActivos;
 	@FXML
 	TextField tfBuscar;
 	@FXML
@@ -137,6 +140,11 @@ public class ControladorAlumnos
 			this.borrarTablaClases();
 			this.borrarTablaPagos();
 		}
+	}
+
+	@FXML
+	protected void cambiarActivos(ActionEvent event) throws Exception {
+		this.actualizarTablaAlumnos();
 	}
 
 	@FXML
@@ -215,7 +223,7 @@ public class ControladorAlumnos
 			this.controladorPrincipal.mostrarExito("El alumno se creó con éxito.");
 			actualizarTablaAlumnos();
 			for (Alumno al : tvAlumnos.getItems())
-				if(al.getId() == alumno.getId())
+				if (al.getId() == alumno.getId())
 					tvAlumnos.getSelectionModel().select(al);
 			break;
 		case EDITAR:
@@ -254,7 +262,7 @@ public class ControladorAlumnos
 
 	@FXML
 	protected void copiarClase(ActionEvent event) throws Exception {
-		ChoiceDialog<Alumno> dialog = new ChoiceDialog<>(null, DAOAlumno.INSTANCE.listar());
+		ChoiceDialog<Alumno> dialog = new ChoiceDialog<>(null, DAOAlumno.INSTANCE.listar(cbActivos.isSelected()));
 		dialog.setSelectedItem(tvAlumnos.getSelectionModel().getSelectedItem());
 		dialog.setTitle("Elección de Alumno");
 		dialog.setHeaderText(null);
@@ -298,19 +306,21 @@ public class ControladorAlumnos
 			tcAlumnoCentroEstudios.setOnEditCommit(this);
 			tvAlumnos.getSelectionModel().selectedItemProperty().addListener(this);
 			actualizarTablaAlumnos();
-			
-			//Decoramos la tabla según el estado del alumno
+
+			// Decoramos la tabla según el estado del alumno
 			tvAlumnos.setRowFactory(tv -> new TableRow<Alumno>() {
-			    @Override
-			    public void updateItem(Alumno item, boolean empty) {
-			        super.updateItem(item, empty) ;
-			        if (item == null) {
-			            setStyle("");
-			        } else if (item.getFechaBaja() != null){
-			        	if (item.getFechaBaja().isBefore(LocalDate.now()))
-			        		setStyle("-fx-background-color: tomato;");
-			        }
-			    }
+				@Override
+				public void updateItem(Alumno item, boolean empty) {
+					super.updateItem(item, empty);
+					setStyle(null);
+					if (item != null)
+						if (item.getFechaBaja() != null) {
+							if (item.getFechaBaja().isBefore(LocalDate.now())) {
+								System.out.println("TRON: " + item.getNombreCompleto() + ", " + item.getFechaBaja());
+								setStyle("-fx-background-color: tomato;");
+							}
+						}
+				}
 			});
 
 			// //Campo de Búsqueda
@@ -392,7 +402,7 @@ public class ControladorAlumnos
 	private void actualizarTablaAlumnos() throws Exception {
 		if (olAlumnos != null)
 			olAlumnos.removeAll(olAlumnos);
-		olAlumnos = FXCollections.observableArrayList(DAOAlumno.INSTANCE.listar());
+		olAlumnos = FXCollections.observableArrayList(DAOAlumno.INSTANCE.listar(cbActivos.isSelected()));
 		tvAlumnos.setItems(olAlumnos);
 		this.borrarTablaClases();
 		this.borrarTablaPagos();

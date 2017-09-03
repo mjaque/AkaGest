@@ -24,16 +24,18 @@ public enum DAOAlumno {
 			+ ") = (?,?,?,?,?,?,?,?,?,?) WHERE ID=?";
 	private final String SQL_BORRAR = "DELETE FROM " + TABLA + " WHERE ID=?";
 	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " ORDER BY UPPER(NOMBRE_COMPLETO) ASC";
+	private final String SQL_LISTAR_ACTIVOS = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE FECHA_BAJA IS NULL OR FECHA_BAJA > NOW() ORDER BY UPPER(NOMBRE_COMPLETO) ASC";
 	private final String SQL_BUSCAR_POR_ID = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE ID = ?";
 	private final String SQL_BUSCAR_POR_NOMBRE = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE UPPER(NOMBRE_COMPLETO) LIKE ?";
 	//private this.final String SQL_BUSCAR_HOY = "SELECT " + COLUMNAS + " FROM " + TABLA + " JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() "
 	//		+ "ORDER BY CLASE.HORA ASC";
 	private final String SQL_BUSCAR_HOY = "SELECT ALUMNO.ID, ALUMNO.NIF, ALUMNO.NOMBRE_COMPLETO, ALUMNO.EMAIL, ALUMNO.TELEFONOS, ALUMNO.CENTRO_ESTUDIOS, ALUMNO.DATOS_PROGENITOR, ALUMNO.NOTAS, ALUMNO.FECHA_ALTA, ALUMNO.FECHA_BAJA FROM ALUMNO JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() ORDER BY CLASE.HORA ASC";
-	private PreparedStatement psInsertar, psActualizar, psBorrar, psCargar, psListar, psBuscarPorId, psBuscarPorNombre, psBuscarHoy;
+	private PreparedStatement psInsertar, psActualizar, psBorrar, psCargar, psListar, psListarActivos, psBuscarPorId, psBuscarPorNombre, psBuscarHoy;
 
 	private DAOAlumno(){
 		try {
 			this.psListar = BD.INSTANCE.getConexion().prepareStatement(SQL_LISTAR);
+			this.psListarActivos = BD.INSTANCE.getConexion().prepareStatement(SQL_LISTAR_ACTIVOS);
 			this.psBuscarPorId = BD.INSTANCE.getConexion().prepareStatement(SQL_BUSCAR_POR_ID);
 			this.psBuscarPorNombre = BD.INSTANCE.getConexion().prepareStatement(SQL_BUSCAR_POR_NOMBRE);
 			this.psBuscarHoy = BD.INSTANCE.getConexion().prepareStatement(SQL_BUSCAR_HOY);
@@ -125,10 +127,15 @@ public enum DAOAlumno {
 		rsNuevosIds.close();
 	}
 
-	public ArrayList<Alumno> listar() throws Exception {
+	public ArrayList<Alumno> listar(boolean soloActivos) throws Exception {
 		ArrayList<Alumno> resultado = new ArrayList<>();
-
-		ResultSet rs = this.psListar.executeQuery();
+		
+		ResultSet rs;
+		
+		if (soloActivos)
+			rs = this.psListarActivos.executeQuery();
+		else
+			rs = this.psListar.executeQuery();
 		while (rs.next()) 
 			resultado.add(this.get(rs));
 		

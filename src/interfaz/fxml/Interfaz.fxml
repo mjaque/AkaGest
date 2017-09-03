@@ -55,7 +55,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Ayuda">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#verAcercaDe" text="Acerca de">
+                <MenuItem mnemonicParsing="false" onAction="#verAcercaDe" text="Acerca de AkaGest">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="Z" control="UP" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
