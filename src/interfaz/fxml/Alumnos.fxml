@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ControladorAlumnos">
+<SplitPane dividerPositions="0.4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.ControladorAlumnos">
    <items>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
@@ -140,6 +140,7 @@
                               <TableColumn fx:id="tcClaseAsignatura" minWidth="100.0" prefWidth="185.0" style="-fx-alignment: CENTER_LEFT;" text="Asignatura" />
                               <TableColumn fx:id="tcClaseDuracion" maxWidth="3000.0" prefWidth="25.0" style="-fx-alignment: CENTER;" text="Duración" />
                               <TableColumn fx:id="tcClasePrecioHora" prefWidth="50.0" style="-fx-alignment: CENTER;" text="Precio/Hora" />
+                              <TableColumn fx:id="tcClasePagada" prefWidth="75.0" text="Pagada" />
                               <TableColumn fx:id="tcClaseEstado" prefWidth="50.0" style="-fx-alignment: CENTER_LEFT;" text="Estado" />
                               <TableColumn fx:id="tcClaseAsistencia" prefWidth="50.0" text="Asistencia" />
                               <TableColumn fx:id="tcClaseObservaciones" prefWidth="150.0" style="-fx-alignment: CENTER_LEFT;" text="Observaciones" />

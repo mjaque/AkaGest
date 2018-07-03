@@ -10,17 +10,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import util.Log;
 
-//Versión 1:
+//Versión:
+//TODO: En el interfaz principal, en clases, añadir columna calculada con el id del pago correspondiente
 //TODO: Evitar warning de css (-fx-background-color
-//TODO: Bug. Limpiar el formulario de Alumno cuando no hay ninguno seleccionado. No reproducido.
 //TODO: Bug. Al cerrar la app, cerrar los posibles diálogos abiertos.
-//TODO: Lista de Espera.
 
-//Versión 2:
-//TODO: View de ComboBox con buscador. Utilizarlo en Clases.Alumno.
-//TODO: Diseñar e implementar Clases de Grupo y Clases Programadas. Con tablas auxiliares.
-//TODO: Diseñar e implementar Lista de Espera.
-//TODO: Reinicio de la base de datos.
 
 public class AkaGest extends Application{
 	

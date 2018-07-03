@@ -94,7 +94,7 @@ public class ControladorAlumnos
 	@FXML
 	TableColumn<Clase, Float> tcClaseDuracion, tcClasePrecioHora;
 	@FXML
-	TableColumn<Clase, Boolean> tcClaseAsistencia;
+	TableColumn<Clase, Boolean> tcClaseAsistencia, tcClasePagada;
 	@FXML
 	TableColumn<Clase, Clase.Estado> tcClaseEstado;
 	@FXML
@@ -316,7 +316,6 @@ public class ControladorAlumnos
 					if (item != null)
 						if (item.getFechaBaja() != null) {
 							if (item.getFechaBaja().isBefore(LocalDate.now())) {
-								System.out.println("TRON: " + item.getNombreCompleto() + ", " + item.getFechaBaja());
 								setStyle("-fx-background-color: tomato;");
 							}
 						}
@@ -600,6 +599,8 @@ public class ControladorAlumnos
 				tcClaseEstado.setCellValueFactory(new PropertyValueFactory<Clase, Clase.Estado>("estado"));
 				// tcClaseEstado.setCellFactory(ComboBoxTableCell.forTableColumn(olEstados));
 				// tcClaseEstado.setOnEditCommit(this);
+				
+				tcClasePagada.setCellValueFactory(new PropertyValueFactory<Clase, Boolean>("pagada"));
 
 				tcClaseAsistencia.setCellValueFactory(new PropertyValueFactory<Clase, Boolean>("asistencia"));
 				// tcClaseAsistencia.setCellFactory(CheckBoxTableCell.forTableColumn(tcClaseAsistencia));

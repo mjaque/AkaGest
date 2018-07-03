@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.h2.jdbc.JdbcSQLException;
+
 import interfaz.Controlador;
 import negocio.Alumno;
 import negocio.Clase;
@@ -31,9 +33,10 @@ public enum DAOClase {
 	private final String SQL_ACTUALIZAR = "UPDATE " + TABLA + " SET (" + COLUMNAS
 			+ ") = (?,?,?,?,?,?,?,?,?,?) WHERE ID=?";
 	private final String SQL_BORRAR = "DELETE FROM " + TABLA + " WHERE ID=?";
-	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA
+	private final String SQL_COL_PAGADA = "((SELECT SUM(IMPORTE) FROM PAGO WHERE PAGO.ID_ALUMNO = a.ID_ALUMNO) >= (SELECT SUM(DURACION*PRECIO) FROM CLASE b WHERE b.FECHA <= a.FECHA AND b.ID_ALUMNO = a.ID_ALUMNO)) AS PAGADA ";
+	private final String SQL_LISTAR = "SELECT " + COLUMNAS + ", " + SQL_COL_PAGADA + " FROM " + TABLA + " a "
 			+ " WHERE ID_ALUMNO != 30 ORDER BY FECHA, HORA ASC";
-	private final String SQL_LISTAR_POR_ALUMNO = "SELECT " + COLUMNAS + " FROM " + TABLA
+	private final String SQL_LISTAR_POR_ALUMNO = "SELECT " + COLUMNAS + ", " + SQL_COL_PAGADA + " FROM " + TABLA + " a " 
 			+ " WHERE ID_ALUMNO = ? ORDER BY FECHA DESC, HORA DESC";
 	private final String SQL_CONTRATADO_POR_ALUMNO = "SELECT SUM(PRECIO * DURACION) FROM " + TABLA
 			+ " WHERE ID_ALUMNO = ?";
@@ -133,7 +136,6 @@ public enum DAOClase {
 
 	public ArrayList<Clase> listar() throws Exception {
 		ArrayList<Clase> resultado = new ArrayList<>();
-
 		ResultSet rs = this.psListar.executeQuery();
 		while (rs.next())
 			resultado.add(this.get(rs));
@@ -144,7 +146,6 @@ public enum DAOClase {
 
 	public ArrayList<Clase> listarPorAlumno(Alumno alumno) throws Exception {
 		ArrayList<Clase> resultado = new ArrayList<>();
-
 		this.psListarPorAlumno.setInt(1, alumno.getId());
 		ResultSet rs = this.psListarPorAlumno.executeQuery();
 		while (rs.next())
@@ -184,6 +185,7 @@ public enum DAOClase {
 		item.setPrecioHora(rs.getFloat("PRECIO"));
 		if (rs.getString("ESTADO") != null)
 			item.setEstado(Clase.Estado.valueOf(rs.getString("ESTADO")));
+		item.setPagada(rs.getBoolean("PAGADA"));
 		item.setAsistencia(rs.getBoolean("ASISTENCIA"));
 		item.setNotas(rs.getString("NOTAS"));
 		return item;

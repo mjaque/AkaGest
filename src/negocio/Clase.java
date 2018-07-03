@@ -25,8 +25,10 @@ public class Clase {
 	private FloatProperty duracion = new SimpleFloatProperty();
 	private FloatProperty precioHora = new SimpleFloatProperty();
 	private Estado estado;
+	private BooleanProperty pagada = new SimpleBooleanProperty();
 	private BooleanProperty asistencia = new SimpleBooleanProperty();
 	private StringProperty notas = new SimpleStringProperty();
+	private StringProperty pago = new SimpleStringProperty();
 	
 	private DAOClase dao;
 	
@@ -36,8 +38,10 @@ public class Clase {
 		this.duracion.set(1f);
 		this.precioHora.set(15f);
 		this.estado = Estado.Prevista;
+		this.pagada.set(false);
 		this.asistencia.set(false);
 		this.notas.set("");
+		this.pago.set("Sin calcular");
 	}
 	
 	public Clase(Clase clase) throws Exception{
@@ -47,6 +51,7 @@ public class Clase {
 		this.asignatura = clase.asignatura;
 		this.precioHora.set(clase.getPrecioHora());
 		this.estado = clase.getEstado();
+		this.pagada.set(clase.isPagada());
 		this.asistencia.set(clase.isAsistencia());
 		this.notas.set(clase.getNotas());
 	}
@@ -102,8 +107,17 @@ public class Clase {
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
+	public Boolean isPagada() {
+		return pagada.get();
+	}
+	public void setPagada(Boolean pagada) {
+		this.pagada.set(pagada);
+	}
 	public Boolean isAsistencia() {
 		return asistencia.get();
+	}
+	public BooleanProperty pagadaProperty(){
+		return pagada;
 	}
 	public void setAsistencia(Boolean asistencia) {
 		this.asistencia.set(asistencia);
