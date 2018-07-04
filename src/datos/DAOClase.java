@@ -185,7 +185,10 @@ public enum DAOClase {
 		item.setPrecioHora(rs.getFloat("PRECIO"));
 		if (rs.getString("ESTADO") != null)
 			item.setEstado(Clase.Estado.valueOf(rs.getString("ESTADO")));
-		item.setPagada(rs.getBoolean("PAGADA"));
+		if (rs.getBoolean("PAGADA"))
+			item.setPagada("Pagada");
+		else
+			item.setPagada("PENDIENTE");
 		item.setAsistencia(rs.getBoolean("ASISTENCIA"));
 		item.setNotas(rs.getString("NOTAS"));
 		return item;

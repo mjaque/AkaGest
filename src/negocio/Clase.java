@@ -25,7 +25,7 @@ public class Clase {
 	private FloatProperty duracion = new SimpleFloatProperty();
 	private FloatProperty precioHora = new SimpleFloatProperty();
 	private Estado estado;
-	private BooleanProperty pagada = new SimpleBooleanProperty();
+	private StringProperty pagada = new SimpleStringProperty();
 	private BooleanProperty asistencia = new SimpleBooleanProperty();
 	private StringProperty notas = new SimpleStringProperty();
 	private StringProperty pago = new SimpleStringProperty();
@@ -38,7 +38,7 @@ public class Clase {
 		this.duracion.set(1f);
 		this.precioHora.set(15f);
 		this.estado = Estado.Prevista;
-		this.pagada.set(false);
+		this.pagada.set("PENDIENTE");
 		this.asistencia.set(false);
 		this.notas.set("");
 		this.pago.set("Sin calcular");
@@ -51,7 +51,7 @@ public class Clase {
 		this.asignatura = clase.asignatura;
 		this.precioHora.set(clase.getPrecioHora());
 		this.estado = clase.getEstado();
-		this.pagada.set(clase.isPagada());
+		this.pagada.set(clase.getPagada());
 		this.asistencia.set(clase.isAsistencia());
 		this.notas.set(clase.getNotas());
 	}
@@ -107,16 +107,16 @@ public class Clase {
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
-	public Boolean isPagada() {
+	public String getPagada() {
 		return pagada.get();
 	}
-	public void setPagada(Boolean pagada) {
+	public void setPagada(String pagada) {
 		this.pagada.set(pagada);
 	}
 	public Boolean isAsistencia() {
 		return asistencia.get();
 	}
-	public BooleanProperty pagadaProperty(){
+	public StringProperty pagadaProperty(){
 		return pagada;
 	}
 	public void setAsistencia(Boolean asistencia) {

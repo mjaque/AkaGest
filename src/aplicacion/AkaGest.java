@@ -18,7 +18,7 @@ import util.Log;
 
 public class AkaGest extends Application{
 	
-	public static final String VERSION = "4.2";
+	public static final String VERSION = "4.3";
 	
 	private static Controlador controlador;
 	

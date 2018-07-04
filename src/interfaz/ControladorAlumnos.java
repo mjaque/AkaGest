@@ -90,11 +90,11 @@ public class ControladorAlumnos
 	@FXML
 	TableColumn<Clase, Asignatura> tcClaseAsignatura;
 	@FXML
-	TableColumn<Clase, String> tcClaseObservaciones;
+	TableColumn<Clase, String> tcClaseObservaciones, tcClasePagada;
 	@FXML
 	TableColumn<Clase, Float> tcClaseDuracion, tcClasePrecioHora;
 	@FXML
-	TableColumn<Clase, Boolean> tcClaseAsistencia, tcClasePagada;
+	TableColumn<Clase, Boolean> tcClaseAsistencia;
 	@FXML
 	TableColumn<Clase, Clase.Estado> tcClaseEstado;
 	@FXML
@@ -600,7 +600,7 @@ public class ControladorAlumnos
 				// tcClaseEstado.setCellFactory(ComboBoxTableCell.forTableColumn(olEstados));
 				// tcClaseEstado.setOnEditCommit(this);
 				
-				tcClasePagada.setCellValueFactory(new PropertyValueFactory<Clase, Boolean>("pagada"));
+				tcClasePagada.setCellValueFactory(new PropertyValueFactory<Clase, String>("pagada"));
 
 				tcClaseAsistencia.setCellValueFactory(new PropertyValueFactory<Clase, Boolean>("asistencia"));
 				// tcClaseAsistencia.setCellFactory(CheckBoxTableCell.forTableColumn(tcClaseAsistencia));
