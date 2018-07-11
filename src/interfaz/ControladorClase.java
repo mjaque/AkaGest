@@ -84,7 +84,10 @@ public class ControladorClase implements Initializable, EventHandler {
 			this.clase.setDuracion(Float.parseFloat(this.tfDuracion.getText()));
 			this.clase.setPrecioHora(Float.parseFloat(this.tfPrecioHora.getText()));
 			this.clase.setEstado(this.cbEstado.getValue());
-			this.clase.setAsistencia(this.chbAsistencia.isSelected());
+			if (this.chbAsistencia.isSelected())
+				this.clase.setAsistencia("Sí");
+			else
+				this.clase.setAsistencia("NO");
 			this.clase.setNotas(this.taObservaciones.getText());
 			this.clase.guardar();
 			if (this.controladorLlamante != null)
@@ -135,7 +138,10 @@ public class ControladorClase implements Initializable, EventHandler {
 			this.tfPrecioHora.setText(String.valueOf(clase.getPrecioHora()));
 			this.lblTotal.setText("= " + clase.getPrecioTotal());
 			this.cbEstado.setValue(clase.getEstado());
-			this.chbAsistencia.setSelected(clase.isAsistencia());
+			if (clase.getAsistencia().equals("Sí"))
+				this.chbAsistencia.setSelected(true);
+			else
+				this.chbAsistencia.setSelected(false);
 			this.taObservaciones.setText(clase.getNotas());
 		}
 	}

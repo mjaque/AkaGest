@@ -57,7 +57,7 @@ public class ControladorClases implements Actualizable, Initializable, ChangeLis
 	@FXML
 	TableColumn<Clase, Asignatura> tcClaseAsignatura;
 	@FXML
-	TableColumn<Clase, String> tcClaseObservaciones;
+	TableColumn<Clase, String> tcClasePagada, tcClaseObservaciones;
 	@FXML
 	TableColumn<Clase, Float> tcClaseDuracion, tcClasePrecioHora;
 	@FXML
@@ -129,6 +129,7 @@ public class ControladorClases implements Actualizable, Initializable, ChangeLis
 			tcClaseAsignatura.setCellValueFactory(new PropertyValueFactory<Clase, Asignatura>("asignatura"));
 			tcClaseDuracion.setCellValueFactory(new PropertyValueFactory<Clase, Float>("duracion"));
 			tcClasePrecioHora.setCellValueFactory(new PropertyValueFactory<Clase, Float>("precioHora"));
+			tcClasePagada.setCellValueFactory(new PropertyValueFactory<Clase, String>("pagada"));
 			tcClaseEstado.setCellValueFactory(new PropertyValueFactory<Clase, Clase.Estado>("estado"));
 			tcClaseAsistencia.setCellValueFactory(new PropertyValueFactory<Clase, Boolean>("asistencia"));
 			tcClaseObservaciones.setCellValueFactory(new PropertyValueFactory<Clase, String>("notas"));

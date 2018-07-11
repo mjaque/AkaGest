@@ -97,7 +97,7 @@ public enum DAOClase {
 		this.psInsertar.setFloat(i++, clase.getDuracion());
 		this.psInsertar.setFloat(i++, clase.getPrecioHora());
 		this.psInsertar.setString(i++, clase.getEstado().toString());
-		this.psInsertar.setBoolean(i++, clase.isAsistencia());
+		this.psInsertar.setBoolean(i++, clase.getAsistencia().equals("Sí"));
 		this.psInsertar.setString(i++, clase.getNotas());
 
 		this.psInsertar.execute();
@@ -126,7 +126,7 @@ public enum DAOClase {
 		this.psActualizar.setFloat(i++, clase.getDuracion());
 		this.psActualizar.setFloat(i++, clase.getPrecioHora());
 		this.psActualizar.setString(i++, clase.getEstado().toString());
-		this.psActualizar.setBoolean(i++, clase.isAsistencia());
+		this.psActualizar.setBoolean(i++, clase.getAsistencia().equals("Sí"));
 		this.psActualizar.setString(i++, clase.getNotas());
 		this.psActualizar.setInt(i++, clase.getId());
 
@@ -189,7 +189,10 @@ public enum DAOClase {
 			item.setPagada("Pagada");
 		else
 			item.setPagada("PENDIENTE");
-		item.setAsistencia(rs.getBoolean("ASISTENCIA"));
+		if (rs.getBoolean("ASISTENCIA"))
+				item.setAsistencia("Sí");
+		else
+			item.setAsistencia("NO");
 		item.setNotas(rs.getString("NOTAS"));
 		return item;
 	}

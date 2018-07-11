@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane fx:id="panelPrincipal" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.Controlador">
+<BorderPane fx:id="panelPrincipal" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.Controlador">
    <top>
       <MenuBar prefHeight="29.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
         <menus>
@@ -51,15 +51,29 @@
                         <KeyCodeCombination alt="ANY" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Consultas">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#verAlumnosPorFacturacion" text="Alumnos por Facturación" />
+                        <MenuItem mnemonicParsing="false" text="Asignaturas por Facturación" />
+                        <MenuItem mnemonicParsing="false" text="Clases por Facturación" />
+                        <MenuItem mnemonicParsing="false" text="Horarios por Facturación" />
+                        <MenuItem mnemonicParsing="false" text="Horas por Facturación" />
+                        <MenuItem mnemonicParsing="false" text="Semana por Facturación" />
+                    </items>
+                  </Menu>
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Ayuda">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#verAcercaDe" text="Acerca de AkaGest">
+                <MenuItem mnemonicParsing="false" onAction="#verAcercaDe" text="Facturación por Alumnos">
                      <accelerator>
                         <KeyCodeCombination alt="ANY" code="Z" control="UP" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator>
                   </MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Facturación por Asignaturas" />
+                  <MenuItem mnemonicParsing="false" text="Facturación por Horarios" />
+                  <MenuItem mnemonicParsing="false" text="Facturación por Día Semana" />
               </items>
             </Menu>
         </menus>

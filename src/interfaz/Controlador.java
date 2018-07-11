@@ -36,8 +36,10 @@ public class Controlador implements Initializable {
 	private Parent panelClases;
 	private Parent panelPagos;
 	private Parent panelResultados;
+	private Parent panelConsulta;
 	private Stage stageResultado = new Stage();
 	private ControladorResultados controladorResultados;
+	private ControladorConsulta controladorConsulta;
 		
 	@FXML //  fx:id="panelPrincipal"
     private BorderPane panelPrincipal; // Value injected by FXMLLoader
@@ -54,9 +56,14 @@ public class Controlador implements Initializable {
 			//this.panelClases.getStylesheets().add(this.getClass().getResource("fxml/clases.css").toExternalForm());
 			this.panelPagos = FXMLLoader.load(this.getClass().getResource("fxml/Pagos.fxml"));
 			
-			FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("fxml/Resultados.fxml"));
-			this.panelResultados = fxmlLoader.load();
-			this.controladorResultados = fxmlLoader.<ControladorResultados>getController();
+			FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("fxml/Consulta.fxml"));
+			this.controladorConsulta = fxmlLoader.<ControladorConsulta>getController();
+			System.out.println("TRON: " + controladorConsulta);
+			this.panelConsulta = fxmlLoader.load();
+			
+			FXMLLoader fxmlLoader2 = new FXMLLoader(this.getClass().getResource("fxml/Resultados.fxml"));
+			this.panelResultados = fxmlLoader2.load();
+			this.controladorResultados = fxmlLoader2.<ControladorResultados>getController();
 			stageResultado.setScene(new Scene(this.panelResultados));
 			
 		} catch (IOException e) {
@@ -99,6 +106,14 @@ public class Controlador implements Initializable {
 		Float saldo = DAOPago.INSTANCE.verArqueoCaja();
 		alert.setContentText("El saldo actual de caja debe ser de " + saldo + "€");
 		alert.showAndWait();	
+	}
+	
+	@FXML
+	public void verAlumnosPorFacturacion(ActionEvent event) throws Exception{
+		this.panelPrincipal.setCenter(this.panelConsulta);
+		//this.panelConsulta.DAOConsultas.INSTANCE.verAlumnosPorFacturacion()
+		System.out.println("TRON: " + this.controladorConsulta);
+		this.controladorConsulta.setResultado("Aquí va el resultado de la consulta");
 	}
 	
 	@FXML
