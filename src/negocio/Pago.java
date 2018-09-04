@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Pago {
-	public enum Operacion {Efectivo, Banco, Salida_Caja};
+	public enum Operacion {Efectivo, Banco, Salida_Caja, Saldo_Inicial};
 	private IntegerProperty id = new SimpleIntegerProperty();
 	private Alumno alumno;
 	private LocalDate fecha;

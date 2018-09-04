@@ -2,16 +2,12 @@ package interfaz;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import aplicacion.AkaGest;
+import datos.DAOConsulta;
 import datos.DAOPago;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,14 +17,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 public class Controlador implements Initializable {
 	
@@ -55,11 +47,11 @@ public class Controlador implements Initializable {
 			this.panelClases = FXMLLoader.load(this.getClass().getResource("fxml/Clases.fxml"));
 			//this.panelClases.getStylesheets().add(this.getClass().getResource("fxml/clases.css").toExternalForm());
 			this.panelPagos = FXMLLoader.load(this.getClass().getResource("fxml/Pagos.fxml"));
+			//this.panelConsulta = FXMLLoader.load(this.getClass().getResource("fxml/Consulta.fxml"));
 			
 			FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("fxml/Consulta.fxml"));
-			this.controladorConsulta = fxmlLoader.<ControladorConsulta>getController();
-			System.out.println("TRON: " + controladorConsulta);
 			this.panelConsulta = fxmlLoader.load();
+			this.controladorConsulta = fxmlLoader.<ControladorConsulta>getController();
 			
 			FXMLLoader fxmlLoader2 = new FXMLLoader(this.getClass().getResource("fxml/Resultados.fxml"));
 			this.panelResultados = fxmlLoader2.load();
@@ -111,9 +103,32 @@ public class Controlador implements Initializable {
 	@FXML
 	public void verAlumnosPorFacturacion(ActionEvent event) throws Exception{
 		this.panelPrincipal.setCenter(this.panelConsulta);
-		//this.panelConsulta.DAOConsultas.INSTANCE.verAlumnosPorFacturacion()
-		System.out.println("TRON: " + this.controladorConsulta);
-		this.controladorConsulta.setResultado("Aquí va el resultado de la consulta");
+		this.controladorConsulta.setResultado(DAOConsulta.INSTANCE.verAlumnosPorFacturacion());
+	}
+	
+	@FXML
+	public void verAsignaturasPorFacturacion(ActionEvent event) throws Exception{
+		this.panelPrincipal.setCenter(this.panelConsulta);
+		this.controladorConsulta.setResultado(DAOConsulta.INSTANCE.verAsignaturasPorFacturacion());
+	}
+	
+	@FXML
+	public void verHorariosPorFacturacion(ActionEvent event) throws Exception{
+		this.panelPrincipal.setCenter(this.panelConsulta);
+		this.controladorConsulta.setResultado(DAOConsulta.INSTANCE.verHorariosPorFacturacion());
+	}
+	
+	@FXML
+	public void verHorasPorFacturacion(ActionEvent event) throws Exception{
+		this.panelPrincipal.setCenter(this.panelConsulta);
+		this.controladorConsulta.setResultado(DAOConsulta.INSTANCE.verHorasPorFacturacion());
+	}
+	
+	@FXML
+	public void verDiasSemanaPorFacturacion(ActionEvent event) throws Exception{
+		System.out.println("Días Semana");
+		this.panelPrincipal.setCenter(this.panelConsulta);
+		this.controladorConsulta.setResultado(DAOConsulta.INSTANCE.verDiasSemanaPorFacturacion());
 	}
 	
 	@FXML

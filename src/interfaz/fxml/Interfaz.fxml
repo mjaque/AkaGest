@@ -55,11 +55,11 @@
                   <Menu mnemonicParsing="false" text="Consultas">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#verAlumnosPorFacturacion" text="Alumnos por Facturación" />
-                        <MenuItem mnemonicParsing="false" text="Asignaturas por Facturación" />
-                        <MenuItem mnemonicParsing="false" text="Clases por Facturación" />
-                        <MenuItem mnemonicParsing="false" text="Horarios por Facturación" />
-                        <MenuItem mnemonicParsing="false" text="Horas por Facturación" />
-                        <MenuItem mnemonicParsing="false" text="Semana por Facturación" />
+                        <MenuItem mnemonicParsing="false" onAction="#verAsignaturasPorFacturacion" text="Asignaturas por Facturación" />
+                        <MenuItem mnemonicParsing="false" onAction="#verAlumnosPorFacturacion" text="Clases por Facturación" />
+                        <MenuItem mnemonicParsing="false" onAction="#verHorariosPorFacturacion" text="Horarios por Facturación" />
+                        <MenuItem mnemonicParsing="false" onAction="#verHorasPorFacturacion" text="Horas por Facturación" />
+                        <MenuItem mnemonicParsing="false" onAction="#verDiasSemanaPorFacturacion" text="Semana por Facturación" />
                     </items>
                   </Menu>
               </items>
