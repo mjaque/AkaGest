@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import aplicacion.AkaGest;
 import datos.DAOAlumno;
 import datos.DAOAsignatura;
+import datos.DAOCanal;
 import datos.DAOClase;
 import datos.DAOPago;
 import javafx.beans.value.ChangeListener;
@@ -28,6 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -45,6 +47,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import negocio.Alumno;
 import negocio.Asignatura;
+import negocio.Marketing;
 import negocio.Clase;
 import negocio.Pago;
 
@@ -119,6 +122,8 @@ public class ControladorAlumnos
 	private TextArea taDatosProgenitor, taNotas;
 	@FXML
 	private TextField tfNombreCompleto, tfNif, tfEmail, tfTelefonos, tfCentroEstudios;
+	@FXML
+	private ComboBox<Marketing> cboMarketing;
 	@FXML
 	private StackPane spBotones;
 	@FXML
@@ -336,6 +341,10 @@ public class ControladorAlumnos
 
 			this.controladorAlumnoClase.initialize(location, resources);
 			this.controladorAlumnoPago.initialize(location, resources);
+			
+			//Cargamos el combo de Canal
+			this.cboMarketing.setItems(FXCollections.observableArrayList(DAOCanal.INSTANCE.listar()));
+			this.cboMarketing.setDisable(true);
 
 			this.setModo(Modo.ESPERA);
 		} catch (Exception e) {
@@ -396,6 +405,7 @@ public class ControladorAlumnos
 		this.taNotas.clear();
 		this.dpAlta.setValue(LocalDate.now());
 		this.dpBaja.setValue(null);
+		this.cboMarketing.getSelectionModel().clearSelection();
 	}
 
 	private void actualizarTablaAlumnos() throws Exception {
@@ -427,6 +437,7 @@ public class ControladorAlumnos
 		this.taNotas.setEditable(b);
 		this.dpAlta.setDisable(!b);
 		this.dpBaja.setDisable(!b);
+		this.cboMarketing.setDisable(!b);
 	}
 
 	private void actualizar(Alumno alumno) throws Exception {
@@ -440,6 +451,7 @@ public class ControladorAlumnos
 			alumno.setNotas(taNotas.getText());
 			alumno.setFechaAlta(dpAlta.getValue());
 			alumno.setFechaBaja(dpBaja.getValue());
+			alumno.setMarketing(cboMarketing.getValue());
 			alumno.guardar();
 		}
 	}
@@ -455,6 +467,7 @@ public class ControladorAlumnos
 		this.taNotas.setText(alumno.getNotas());
 		this.dpAlta.setValue(alumno.getFechaAlta());
 		this.dpBaja.setValue(alumno.getFechaBaja());
+		this.cboMarketing.setValue(alumno.getMarketing());
 		this.cargarClases(alumno);
 		this.cargarPagos(alumno);
 	}

@@ -20,6 +20,7 @@ public class Alumno {
 	private StringProperty notas = new SimpleStringProperty();
 	private LocalDate fechaAlta;
 	private LocalDate fechaBaja;
+	private Marketing marketing;
 	
 	private DAOAlumno dao;
 	
@@ -153,6 +154,13 @@ public class Alumno {
 	public LocalDate getFechaBaja() {
 		return this.fechaBaja;
 	}
+
+	public void setMarketing(Marketing marketing) {
+		this.marketing = marketing;
+	}
 	
+	public Marketing getMarketing() {
+		return this.marketing;
+	}
 	
 }

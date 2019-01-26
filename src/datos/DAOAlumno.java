@@ -16,12 +16,12 @@ public enum DAOAlumno {
 	
 	private final String TABLA = "ALUMNO";
 	//private final String COLUMNAS = TABLA + ".ID, " + TABLA + ".NIF, " + TABLA + ".NOMBRE_COMPLETO, " + TABLA + ".EMAIL, " + TABLA + ".TELEFONOS, " + TABLA + ".CENTRO_ESTUDIOS, " + TABLA + ".DATOS_PROGENITOR, " + TABLA + ".NOTAS";
-	private final String COLUMNAS = "ID, NIF, NOMBRE_COMPLETO, EMAIL, TELEFONOS, CENTRO_ESTUDIOS, DATOS_PROGENITOR, NOTAS, FECHA_ALTA, FECHA_BAJA";
+	private final String COLUMNAS = "ID, NIF, NOMBRE_COMPLETO, EMAIL, TELEFONOS, CENTRO_ESTUDIOS, DATOS_PROGENITOR, NOTAS, FECHA_ALTA, FECHA_BAJA, ID_MARKETING";
 	private final String SQL_CARGAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE ID=?";
 	private final String SQL_INSERTAR = "INSERT INTO " + TABLA + " (" + COLUMNAS
-			+ ") VALUES (NULL,?,?,?,?,?,?,?,?,?)";
+			+ ") VALUES (NULL,?,?,?,?,?,?,?,?,?,?)";
 	private final String SQL_ACTUALIZAR = "UPDATE " + TABLA + " SET (" + COLUMNAS
-			+ ") = (?,?,?,?,?,?,?,?,?,?) WHERE ID=?";
+			+ ") = (?,?,?,?,?,?,?,?,?,?,?) WHERE ID=?";
 	private final String SQL_BORRAR = "DELETE FROM " + TABLA + " WHERE ID=?";
 	private final String SQL_LISTAR = "SELECT " + COLUMNAS + " FROM " + TABLA + " ORDER BY UPPER(NOMBRE_COMPLETO) ASC";
 	private final String SQL_LISTAR_ACTIVOS = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE FECHA_BAJA IS NULL OR FECHA_BAJA > NOW() ORDER BY UPPER(NOMBRE_COMPLETO) ASC";
@@ -29,7 +29,7 @@ public enum DAOAlumno {
 	private final String SQL_BUSCAR_POR_NOMBRE = "SELECT " + COLUMNAS + " FROM " + TABLA + " WHERE UPPER(NOMBRE_COMPLETO) LIKE ?";
 	//private this.final String SQL_BUSCAR_HOY = "SELECT " + COLUMNAS + " FROM " + TABLA + " JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() "
 	//		+ "ORDER BY CLASE.HORA ASC";
-	private final String SQL_BUSCAR_HOY = "SELECT ALUMNO.ID, ALUMNO.NIF, ALUMNO.NOMBRE_COMPLETO, ALUMNO.EMAIL, ALUMNO.TELEFONOS, ALUMNO.CENTRO_ESTUDIOS, ALUMNO.DATOS_PROGENITOR, ALUMNO.NOTAS, ALUMNO.FECHA_ALTA, ALUMNO.FECHA_BAJA FROM ALUMNO JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() ORDER BY CLASE.HORA ASC";
+	private final String SQL_BUSCAR_HOY = "SELECT ALUMNO.ID, ALUMNO.NIF, ALUMNO.NOMBRE_COMPLETO, ALUMNO.EMAIL, ALUMNO.TELEFONOS, ALUMNO.CENTRO_ESTUDIOS, ALUMNO.DATOS_PROGENITOR, ALUMNO.NOTAS, ALUMNO.FECHA_ALTA, ALUMNO.FECHA_BAJA, ALUMNO.ID_MARKETING FROM ALUMNO JOIN CLASE ON ALUMNO.ID = CLASE.ID_ALUMNO WHERE CLASE.FECHA = CURRENT_DATE() ORDER BY CLASE.HORA ASC";
 	private PreparedStatement psInsertar, psActualizar, psBorrar, psCargar, psListar, psListarActivos, psBuscarPorId, psBuscarPorNombre, psBuscarHoy;
 
 	private DAOAlumno(){
@@ -68,6 +68,8 @@ public enum DAOAlumno {
 			this.psActualizar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
 		else
 			this.psActualizar.setDate(i++, null);
+		this.psActualizar.setInt(i++, alumno.getMarketing().getId());
+		
 		this.psActualizar.setInt(i++, alumno.getId());
 		this.psActualizar.execute();
 	}
@@ -117,6 +119,8 @@ public enum DAOAlumno {
 			this.psInsertar.setDate(i++, Date.valueOf(alumno.getFechaBaja()));
 		else
 			this.psInsertar.setDate(i++, null);
+		this.psInsertar.setInt(i++, alumno.getMarketing().getId());
+		
 		this.psInsertar.execute();
 		ResultSet rsNuevosIds = psInsertar.getGeneratedKeys();
 		if (rsNuevosIds.first()) {
@@ -204,6 +208,7 @@ public enum DAOAlumno {
 			item.setFechaAlta(rs.getDate("FECHA_ALTA").toLocalDate());
 		if(rs.getDate("FECHA_BAJA") != null)
 			item.setFechaBaja(rs.getDate("FECHA_BAJA").toLocalDate());
+		item.setMarketing(DAOCanal.INSTANCE.cargar(rs.getInt("ID_MARKETING")));
 		return item;
 	}
 

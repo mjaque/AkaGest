@@ -2,9 +2,14 @@ package interfaz;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import aplicacion.AkaGest;
+import datos.DAOAlumno;
 import datos.DAOConsulta;
 import datos.DAOPago;
 import javafx.application.Platform;
@@ -20,7 +25,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
+import negocio.Alumno;
 
 public class Controlador implements Initializable {
 	
@@ -129,6 +136,20 @@ public class Controlador implements Initializable {
 		System.out.println("Días Semana");
 		this.panelPrincipal.setCenter(this.panelConsulta);
 		this.controladorConsulta.setResultado(DAOConsulta.INSTANCE.verDiasSemanaPorFacturacion());
+	}
+	
+	@FXML
+	public void verListadoAlumnosActivos(ActionEvent event) throws Exception{
+		System.out.println("verListadoAlumnosActivos");
+		ArrayList<Alumno> alumnosActivos = DAOAlumno.INSTANCE.listar(true);
+		StringBuilder sbCSV = new StringBuilder();
+		for(Alumno alumno : alumnosActivos) {
+			sbCSV.append('\"' + alumno.getNombreCompleto() + '\"');
+			sbCSV.append("\n");
+		}
+		Files.write(Paths.get("/tmp/listaAlumnosActivos.csv"), sbCSV.toString().getBytes(StandardCharsets.UTF_8));
+		//TODO: Lanzar LibreOffice calc
+		Runtime.getRuntime().exec("libreoffice --calc /tmp/listaAlumnosActivos.csv");
 	}
 	
 	@FXML
