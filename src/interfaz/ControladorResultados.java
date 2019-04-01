@@ -1,5 +1,6 @@
 package interfaz;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -63,7 +64,7 @@ public class ControladorResultados implements Initializable {
 		}
 		//Cargamos los datos de cada año
 		int curso = 2012;
-		Double totalAnual = 0d;
+		BigDecimal totalAnual = new BigDecimal(0);
 		String[] datosCurso = new String[14];
 		datosCurso[0] = String.valueOf(curso) + "-" + String.valueOf((curso + 1) % 100);
 		try {
@@ -75,8 +76,8 @@ public class ControladorResultados implements Initializable {
 				}
 				if(dato.getKey().getMonthValue() == 9){
 					//Cambio de curso
-					datosCurso[13] = totalAnual + "€";
-					totalAnual = 0d;
+					datosCurso[13] = totalAnual.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString() + "€";
+					totalAnual = new BigDecimal(0);
 					data.add(datosCurso);
 					curso++;
 					datosCurso = new String[14];
@@ -85,11 +86,11 @@ public class ControladorResultados implements Initializable {
 				int mes = dato.getKey().getMonthValue()+ modificador;
 				int year = dato.getKey().getYear();
 				datosCurso[mes] = String.valueOf(dato.getValue()) + "€";
-				totalAnual += dato.getValue();
+				totalAnual = totalAnual.add(new BigDecimal(dato.getValue()));
 			}
 			//Grabamos el último
-			datosCurso[13] = totalAnual + "€";
-			totalAnual = 0d;
+			datosCurso[13] = totalAnual.setScale(2, BigDecimal.ROUND_HALF_EVEN).toString() + "€";
+			totalAnual = new BigDecimal(0);
 			data.add(datosCurso);
 		} catch (Exception e) {
 			
